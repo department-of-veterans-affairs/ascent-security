@@ -15,6 +15,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class GenerateToken {
 
     public static void main(String[] args) {
+        secret = "vetsGov";
         System.out.println("--------TOKEN START---------\n\n" + generateJwt() + "\n\n--------TOKEN END-------------");
     }
 
@@ -69,7 +70,7 @@ public class GenerateToken {
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
 
-    private static PersonTraits person(){
+    public static PersonTraits person(){
         PersonTraits personTraits = new PersonTraits();
         personTraits.setFirstName("JANE");
         personTraits.setLastName("DOE");

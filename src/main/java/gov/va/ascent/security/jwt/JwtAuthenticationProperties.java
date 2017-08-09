@@ -1,13 +1,11 @@
 package gov.va.ascent.security.jwt;
 
-import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by vgadda on 5/8/17.
  */
-@Component
 @ConfigurationProperties(prefix = "ascent.security.jwt")
 public class JwtAuthenticationProperties {
     private boolean enabled = true;
@@ -17,7 +15,7 @@ public class JwtAuthenticationProperties {
     private String[] excludeUrls = {"/v2/api-docs/**", "/configuration/ui/**", "/swagger-resources/**",
             "/configuration/security/**", "/swagger-ui.html", "/webjars/**", "/**/token"};
 
-    public static final int AUTH_ORDER = ManagementServerProperties.BASIC_AUTH_ORDER + 3;
+    public static final int AUTH_ORDER = SecurityProperties.BASIC_AUTH_ORDER - 2;
     public static final int NO_AUTH_ORDER = AUTH_ORDER + 1;
 
     public boolean isEnabled() {

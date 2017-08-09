@@ -15,13 +15,15 @@ import io.jsonwebtoken.Jwts;
  * Created by vgadda on 5/4/17.
  */
 
-@Component
 public class JwtParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwtParser.class);
 
-    @Autowired
     private JwtAuthenticationProperties jwtAuthenticationProperties;
+
+    public JwtParser(JwtAuthenticationProperties properties){
+        this.jwtAuthenticationProperties = properties;
+    }
 
     public PersonTraits parseJwt(String token){
         PersonTraits person = null;

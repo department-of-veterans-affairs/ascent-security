@@ -1,9 +1,0 @@
-logging:
-  level:
-    org.springframework.security: DEBUG
-    gov.va.ascent: DEBUG
-ascent:
-  security:
-    jwt:
-      filter-process-url: /user/**
-

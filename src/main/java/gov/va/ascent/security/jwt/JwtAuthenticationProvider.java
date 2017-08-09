@@ -11,11 +11,13 @@ import org.springframework.stereotype.Component;
  * Created by vgadda on 5/4/17.
  */
 
-@Component
 public class JwtAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider{
 
-    @Autowired
-    JwtParser parser;
+    private JwtParser parser;
+
+    public JwtAuthenticationProvider(JwtParser parser) {
+        this.parser = parser;
+    }
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
