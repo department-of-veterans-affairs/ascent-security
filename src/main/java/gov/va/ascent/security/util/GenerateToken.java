@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
-import gov.va.ascent.security.jwt.PersonTraits;
+import gov.va.ascent.framework.security.PersonTraits;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 

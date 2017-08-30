@@ -2,6 +2,7 @@ package gov.va.ascent.security.jwt;
 
 import java.util.Date;
 
+import gov.va.ascent.framework.security.PersonTraits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ public class JwtParser {
 
     private PersonTraits getPersonFrom(final Claims claims){
         PersonTraits personTraits = new PersonTraits();
+        personTraits.setTokenId(claims.getId());
         personTraits.setFirstName(claims.get("firstName", String.class));
         personTraits.setLastName(claims.get("lastName", String.class));
         personTraits.setPrefix(claims.get("prefix", String.class));

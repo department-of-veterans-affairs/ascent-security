@@ -1,5 +1,6 @@
 package gov.va.ascent.security;
 
+import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.jwt.JwtAuthenticationProperties;
 import gov.va.ascent.security.util.GenerateToken;
 import org.slf4j.Logger;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import gov.va.ascent.security.jwt.PersonTraits;
 
 @RestController
 public class TokenResource {
