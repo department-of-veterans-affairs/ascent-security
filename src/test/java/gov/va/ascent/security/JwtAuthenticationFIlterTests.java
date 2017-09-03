@@ -1,5 +1,6 @@
 package gov.va.ascent.security;
 
+import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.handler.JwtAuthenticationSuccessHandler;
 import gov.va.ascent.security.jwt.*;
 import gov.va.ascent.security.util.GenerateToken;
