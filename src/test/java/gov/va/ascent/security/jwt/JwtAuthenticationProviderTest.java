@@ -49,9 +49,21 @@ public class JwtAuthenticationProviderTest {
 		
         JwtAuthenticationToken authentication = new JwtAuthenticationToken(token);
         JwtParser parser = new JwtParser(jwtAuthenticationProperties);
-        JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);;
+        JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);
         UserDetails result = instance.retrieveUser(username, authentication);
         assertNotNull(result);
     }
     
+    /**
+     * Test of retrieveUser method, of class JwtAuthenticationProvider.
+     */
+    @Test(expected = JwtAuthenticationException.class) 
+    public void testRetrieveUserWithException() {
+        System.out.println("retrieveUser");
+		
+        JwtAuthenticationToken authentication = new JwtAuthenticationToken("test");
+        JwtParser parser = new JwtParser(jwtAuthenticationProperties);
+        JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);    
+        UserDetails result = instance.retrieveUser("username", authentication);
+    }
 }
