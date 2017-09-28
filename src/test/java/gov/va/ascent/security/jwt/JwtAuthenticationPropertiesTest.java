@@ -123,8 +123,9 @@ public class JwtAuthenticationPropertiesTest {
     @Test
     public void testSetExcludeUrls() {
         System.out.println("setExcludeUrls");
-        String[] excludeUrls = null;
+        String[] excludeUrls = {"http://localhost:8762/api/ascent-demo-service/swagger-ui.html"};
         jwtAuthenticationProperties.setExcludeUrls(excludeUrls);
+        assertTrue(jwtAuthenticationProperties.getExcludeUrls().length > 0);
     }
     
 }

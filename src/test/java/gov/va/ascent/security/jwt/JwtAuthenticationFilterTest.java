@@ -1,28 +1,34 @@
-package gov.va.ascent.security;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package gov.va.ascent.security.jwt;
 
-import gov.va.ascent.framework.security.PersonTraits;
-import gov.va.ascent.security.handler.JwtAuthenticationSuccessHandler;
-import gov.va.ascent.security.jwt.*;
-import gov.va.ascent.security.util.GenerateToken;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import gov.va.ascent.framework.security.PersonTraits;
+import gov.va.ascent.security.config.AscentSecurityTestConfig;
+import gov.va.ascent.security.handler.JwtAuthenticationSuccessHandler;
+import gov.va.ascent.security.util.GenerateToken;
 
 /**
- * Created by vgadda on 8/1/17.
+ *
+ * @author rthota
  */
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = JwtTestConfig.class)
-public class JwtAuthenticationFIlterTests {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = AscentSecurityTestConfig.class)
+public class JwtAuthenticationFilterTest {
 
     @Autowired
     JwtAuthenticationProperties properties;
@@ -58,17 +64,4 @@ public class JwtAuthenticationFIlterTests {
                 new MockHttpServletResponse());
     }
 
-}
-
-@Configuration
-class JwtTestConfig {
-    @Bean
-    JwtAuthenticationProperties jwtAuthenticationProperties(){
-        return new JwtAuthenticationProperties();
-    }
-
-    @Bean
-    protected AuthenticationProvider jwtAuthenticationProvider(){
-        return new JwtAuthenticationProvider(new JwtParser(jwtAuthenticationProperties()));
-    }
 }

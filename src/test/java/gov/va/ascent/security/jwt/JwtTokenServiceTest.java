@@ -7,13 +7,8 @@ package gov.va.ascent.security.jwt;
 
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -41,11 +36,6 @@ public class JwtTokenServiceTest {
 	public JwtTokenServiceTest() {
 	}
 
-	@Before
-	public void before() {
-
-	}
-
 	/**
 	 * Test of getTokenFromRequest method, of class JwtTokenService.
 	 */
@@ -71,14 +61,13 @@ public class JwtTokenServiceTest {
 	 * Test of getTokenFromRequest method, of class JwtTokenService.
 	 */
 	@Test
-	public void testGetTokenFromRequest1() {
+	public void testGetTokenFromRequestZeroResult() {
 		System.out.println("getTokenFromRequest");
 		
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpSession session = new MockHttpSession();
 		request.setSession(session);
 		MockitoAnnotations.initMocks(this);
-		//request.addHeader("Authorization", "test");
 		RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 		
 		Map<String, String> result = jwtTokenService.getTokenFromRequest();
