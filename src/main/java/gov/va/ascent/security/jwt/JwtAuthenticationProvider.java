@@ -31,6 +31,6 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
         if(person == null){
             throw new JwtAuthenticationException("Invalid Token");
         }
-        return person;
+        return person; 
     }
 }

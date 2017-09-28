@@ -5,10 +5,6 @@
  */
 package gov.va.ascent.security.jwt;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,19 +57,9 @@ public class JwtAuthenticationPropertiesTest {
     @Test
     public void testGetHeader() {
         System.out.println("getHeader");
-        String expResult = "";
+        String expResult = "Authorization";
         String result = jwtAuthenticationProperties.getHeader();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of setHeader method, of class JwtAuthenticationProperties.
-     */
-    @Test
-    public void testSetHeader() {
-        System.out.println("setHeader");
-        String header = "";
-        jwtAuthenticationProperties.setHeader(header);
+        assertTrue(expResult.equals(result));
     }
 
     /**
@@ -85,7 +71,7 @@ public class JwtAuthenticationPropertiesTest {
         JwtAuthenticationProperties jwtAuthenticationProperties = new JwtAuthenticationProperties();
         String expResult = "secret";
         String result = jwtAuthenticationProperties.getSecret();
-        assertEquals(expResult, result);
+        assertTrue(expResult.equals(result));
     }
 
     /**
@@ -96,7 +82,7 @@ public class JwtAuthenticationPropertiesTest {
         System.out.println("setSecret");
         String secret = "secret";
         jwtAuthenticationProperties.setSecret(secret);
-        assertEquals(secret, jwtAuthenticationProperties.getSecret());
+        assertTrue(secret.equals(jwtAuthenticationProperties.getSecret()));
     }
 
     /**
@@ -105,9 +91,9 @@ public class JwtAuthenticationPropertiesTest {
     @Test
     public void testGetFilterProcessUrl() {
         System.out.println("getFilterProcessUrl");
-        String expResult = "";
+        String expResult = "url";
         String result = jwtAuthenticationProperties.getFilterProcessUrl();
-        assertEquals(expResult, result);
+        assertTrue(expResult.equals(result));
     }
 
     /**
@@ -116,8 +102,9 @@ public class JwtAuthenticationPropertiesTest {
     @Test
     public void testSetFilterProcessUrl() {
         System.out.println("setFilterProcessUrl");
-        String filterProcessUrl = "";
+        String filterProcessUrl = "url";
         jwtAuthenticationProperties.setFilterProcessUrl(filterProcessUrl);
+        assertTrue(filterProcessUrl.equals(jwtAuthenticationProperties.getFilterProcessUrl()));
     }
 
     /**

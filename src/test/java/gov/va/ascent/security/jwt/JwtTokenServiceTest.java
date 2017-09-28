@@ -43,12 +43,7 @@ public class JwtTokenServiceTest {
 
 	@Before
 	public void before() {
-		MockHttpServletRequest request = new MockHttpServletRequest();
-		MockHttpSession session = new MockHttpSession();
-		request.setSession(session);
-		MockitoAnnotations.initMocks(this);
-		request.addHeader("Authorization", "test");
-		RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
 	}
 
 	/**
@@ -57,8 +52,37 @@ public class JwtTokenServiceTest {
 	@Test
 	public void testGetTokenFromRequest() {
 		System.out.println("getTokenFromRequest");
+		
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		MockHttpSession session = new MockHttpSession();
+		request.setSession(session);
+		MockitoAnnotations.initMocks(this);
+		request.addHeader("Authorization", "test");
+		RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+		
 		Map<String, String> result = jwtTokenService.getTokenFromRequest();
 		System.out.println("size is:" + result.size());
-		//assertTrue(result.containsKey("Authorization"));
+		assertEquals(1,result.size());
+		assertTrue(result.containsKey("Authorization"));
+	}
+	
+	
+	/**
+	 * Test of getTokenFromRequest method, of class JwtTokenService.
+	 */
+	@Test
+	public void testGetTokenFromRequest1() {
+		System.out.println("getTokenFromRequest");
+		
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		MockHttpSession session = new MockHttpSession();
+		request.setSession(session);
+		MockitoAnnotations.initMocks(this);
+		//request.addHeader("Authorization", "test");
+		RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+		
+		Map<String, String> result = jwtTokenService.getTokenFromRequest();
+		System.out.println("size is:" + result.size());
+		assertEquals(0,result.size());
 	}
 }
