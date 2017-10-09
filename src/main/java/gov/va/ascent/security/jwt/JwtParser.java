@@ -1,6 +1,8 @@
 package gov.va.ascent.security.jwt;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,12 +35,12 @@ public class JwtParser {
             claims = Jwts.parser().setSigningKey(jwtAuthenticationProperties.getSecret())
                     .requireIssuer("Vets.gov")
                     .parseClaimsJws(token).getBody();
+            person = getPersonFrom(claims);
 
         }catch (JwtException ex){
             LOG.error("Unable to parse JWT token:", ex);
             return person;
         }
-        person = getPersonFrom(claims);
         return person;
     }
 
@@ -53,12 +55,17 @@ public class JwtParser {
         personTraits.setGender(claims.get("gender", String.class));
         personTraits.setAssuranceLevel(claims.get("assuranceLevel", String.class));
         personTraits.setEmail(claims.get("email", String.class));
-        personTraits.setDodedipnid(claims.get("dodedipnid", String.class));
-        personTraits.setPnidType(claims.get("pnidType", String.class));
-        personTraits.setPnid(claims.get("pnid", String.class));
-        personTraits.setPid(claims.get("pid", String.class));
-        personTraits.setIcn(claims.get("icn", String.class));
-        personTraits.setFileNumber(claims.get("fileNumber", String.class));
+        
+        CorrelationIdsParser instance = new CorrelationIdsParser();
+        Map<String, String> result = instance.parseCorrelationIds(claims.get("correlationIds", String.class));
+        personTraits.setCorrelationIds(claims.get("correlationIds", String.class));
+        personTraits.setDodedipnid(result.get("dodedipnid"));
+        personTraits.setPnidType(result.get("pnidType"));
+        personTraits.setPnid(result.get("pnid"));
+        personTraits.setPid(result.get("pid"));
+        personTraits.setIcn(result.get("icn"));
+        personTraits.setFileNumber(result.get("fileNumber"));
+        
         return personTraits;
     }
 

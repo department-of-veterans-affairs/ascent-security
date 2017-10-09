@@ -45,8 +45,9 @@ public class PersonTraits extends User{
     private String pid;
     private String icn;
     private String fileNumber;
+    private String correlationIds;
 
-    @Override
+	@Override
     @JsonIgnore
     public List<GrantedAuthority> getAuthorities() {
         return new ArrayList<>(super.getAuthorities());
@@ -208,6 +209,14 @@ public class PersonTraits extends User{
         this.fileNumber = fileNumber;
     }
 
+    public String getCorrelationIds() {
+		return correlationIds;
+	}
+
+	public void setCorrelationIds(String correlationIds) {
+		this.correlationIds = correlationIds;
+	}
+	
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -231,6 +240,8 @@ public class PersonTraits extends User{
         if (pnid != null ? !pnid.equals(that.pnid) : that.pnid != null) return false;
         if (pid != null ? !pid.equals(that.pid) : that.pid != null) return false;
         if (icn != null ? !icn.equals(that.icn) : that.icn != null) return false;
+		if (correlationIds != null ? !correlationIds.equals(that.correlationIds) : that.correlationIds != null)
+			return false;        
         return fileNumber != null ? fileNumber.equals(that.fileNumber) : that.fileNumber == null;
     }
 
@@ -252,6 +263,8 @@ public class PersonTraits extends User{
         result = 31 * result + (pid != null ? pid.hashCode() : 0);
         result = 31 * result + (icn != null ? icn.hashCode() : 0);
         result = 31 * result + (fileNumber != null ? fileNumber.hashCode() : 0);
+        result = 31 * result + (correlationIds != null ? correlationIds.hashCode() : 0);        
+        
         return result;
     }
 
@@ -272,6 +285,7 @@ public class PersonTraits extends User{
                 ", pnid='" + pnid + '\'' +
                 ", pid='" + pid + '\'' +
                 ", icn='" + icn + '\'' +
+                ", correlationIds='" + correlationIds + '\'' +                
                 ", fileNumber='" + fileNumber + '\'' +
                 '}';
     }
