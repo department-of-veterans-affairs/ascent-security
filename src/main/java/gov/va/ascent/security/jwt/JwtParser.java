@@ -1,14 +1,12 @@
 package gov.va.ascent.security.jwt;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
+import gov.va.ascent.framework.security.PersonTraits;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -46,6 +44,7 @@ public class JwtParser {
 
     private PersonTraits getPersonFrom(final Claims claims){
         PersonTraits personTraits = new PersonTraits();
+        personTraits.setTokenId(claims.getId());
         personTraits.setFirstName(claims.get("firstName", String.class));
         personTraits.setLastName(claims.get("lastName", String.class));
         personTraits.setPrefix(claims.get("prefix", String.class));
