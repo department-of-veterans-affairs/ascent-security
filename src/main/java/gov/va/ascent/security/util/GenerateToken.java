@@ -13,13 +13,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
  * Created by vgadda on 5/5/17.
  */
 public class GenerateToken {
+    
+	private static String secret = "secret";
 
     public static void main(String[] args) {
         secret = "vetsGov";
-        System.out.println("--------TOKEN START---------\n\n" + generateJwt() + "\n\n--------TOKEN END-------------");
     }
-
-    private static String secret = "secret";
 
     public static String generateJwt(){
         return generateJwt(person(),300, secret);

@@ -20,7 +20,7 @@ public class JwtTokenService {
     private JwtAuthenticationProperties jwtAuthenticationProperties;
 
     public Map<String, String> getTokenFromRequest(){
-        Map<String, String> token = new HashMap<String, String>();
+        Map<String, String> token = new HashMap<>();
         final HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String tokenValue = request.getHeader(jwtAuthenticationProperties.getHeader());
