@@ -1,11 +1,13 @@
 package gov.va.ascent.security.jwt;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-import gov.va.ascent.framework.security.PersonTraits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import gov.va.ascent.framework.security.PersonTraits;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -32,12 +34,12 @@ public class JwtParser {
             claims = Jwts.parser().setSigningKey(jwtAuthenticationProperties.getSecret())
                     .requireIssuer("Vets.gov")
                     .parseClaimsJws(token).getBody();
+            person = getPersonFrom(claims);
 
         }catch (JwtException ex){
             LOG.error("Unable to parse JWT token:", ex);
             return person;
         }
-        person = getPersonFrom(claims);
         return person;
     }
 
@@ -53,14 +55,20 @@ public class JwtParser {
         personTraits.setGender(claims.get("gender", String.class));
         personTraits.setAssuranceLevel(claims.get("assuranceLevel", String.class));
         personTraits.setEmail(claims.get("email", String.class));
-        personTraits.setDodedipnid(claims.get("dodedipnid", String.class));
-        personTraits.setPnidType(claims.get("pnidType", String.class));
-        personTraits.setPnid(claims.get("pnid", String.class));
-        personTraits.setPid(claims.get("pid", String.class));
-        personTraits.setIcn(claims.get("icn", String.class));
-        personTraits.setFileNumber(claims.get("fileNumber", String.class));
+        
+        CorrelationIdsParser instance = new CorrelationIdsParser();
+        List<String> list = (List<String>) claims.get("correlationIds");
+        Map<String, String> result = instance.parseCorrelationIds(list);
+        
+        personTraits.setCorrelationIds(list);
+        personTraits.setDodedipnid(result.get("dodedipnid"));
+        personTraits.setPnidType(result.get("pnidType"));
+        personTraits.setPnid(result.get("pnid"));
+        personTraits.setPid(result.get("pid"));
+        personTraits.setIcn(result.get("icn"));
+        personTraits.setFileNumber(result.get("fileNumber"));
+        
         return personTraits;
     }
-
 
 }
