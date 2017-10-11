@@ -1,8 +1,10 @@
 package gov.va.ascent.security.util;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -69,10 +71,10 @@ public class GenerateToken {
                 .claim("icn", person.getIcn())
                 .claim("fileNumber", person.getFileNumber())
                 .claim("correlationIds", person.getCorrelationIds())
-                
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
 
+    
     public static PersonTraits person(){
         PersonTraits personTraits = new PersonTraits();
         personTraits.setFirstName("JANE");
@@ -90,7 +92,10 @@ public class GenerateToken {
         personTraits.setPid("6666345");
         personTraits.setIcn("77779102");
         personTraits.setFileNumber("912444689");
-        personTraits.setCorrelationIds("77779102^NI^200M^USVHA^P,912444689^PI^200BRLS^USVBA^A,6666345^PI^200CORP^USVBA^A,1105051936^NI^200DOD^USDOD^A,912444689^SS");
+        
+        //String[] strArray = {"77779102^NI^200M^USVHA^P","912444689^PI^200BRLS^USVBA^A","6666345^PI^200CORP^USVBA^A","1105051936^NI^200DOD^USDOD^A","912444689^SS"};
+        List<String> strArray = Arrays.asList("77779102^NI^200M^USVHA^P","912444689^PI^200BRLS^USVBA^A","6666345^PI^200CORP^USVBA^A","1105051936^NI^200DOD^USDOD^A","912444689^SS");
+        personTraits.setCorrelationIds(strArray);
         return personTraits;
     }
 }

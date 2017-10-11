@@ -1,6 +1,9 @@
 package gov.va.ascent.security.jwt;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -56,8 +59,10 @@ public class JwtParser {
         personTraits.setEmail(claims.get("email", String.class));
         
         CorrelationIdsParser instance = new CorrelationIdsParser();
-        Map<String, String> result = instance.parseCorrelationIds(claims.get("correlationIds", String.class));
-        personTraits.setCorrelationIds(claims.get("correlationIds", String.class));
+        List<String> list = (List<String>) claims.get("correlationIds");
+        Map<String, String> result = instance.parseCorrelationIds(list);
+        
+        personTraits.setCorrelationIds(list);
         personTraits.setDodedipnid(result.get("dodedipnid"));
         personTraits.setPnidType(result.get("pnidType"));
         personTraits.setPnid(result.get("pnid"));
@@ -67,6 +72,5 @@ public class JwtParser {
         
         return personTraits;
     }
-
 
 }

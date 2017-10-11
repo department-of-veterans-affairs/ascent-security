@@ -1,7 +1,11 @@
 package gov.va.ascent.security.jwt;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -87,23 +91,45 @@ public class CorrelationIdsParser {
 	 */
 	private static final int ISSUER_INDEX = 3;
 
+	/**
+	 * The Constant ISSUER_INDEX.
+	 */
+	private static final int STATUS_INDEX = 4;
+	
 	private final HashMap<String, String> hmap = new HashMap<>();
 
-	public Map<String, String> parseCorrelationIds(String correlatonIds) {
-		String[] allIds = correlatonIds.split(",");
-		for (String token : allIds) {
-			processToken(token);
+    private static final Logger LOG = LoggerFactory.getLogger(CorrelationIdsParser.class);
+	
+    /**
+     * 
+     * @param list
+     * @return
+     */
+	public Map<String, String> parseCorrelationIds(List<String> list) {
+		for (String token : list) {
+				processToken(token);
 		}
 		return hmap;
 	}
-
-	private void processToken(String patientId) {
-		final String[] tokens = patientId.split("\\^");
+	
+	/**
+	 * process the token and populate the map with values.
+	 * @param tokenId
+	 */
+	private void processToken(String tokenId) {
+		final String[] tokens = tokenId.split("\\^");
 		if (tokens.length >= MAX_FIELD_COUNT) {
 			final String elementId = tokens[ELEMENT_ID_INDEX];
 			final String type = tokens[TYPE_INDEX];
 			final String assigningFacility = tokens[SOURCE_INDEX];
 			final String assigningAuthority = tokens[ISSUER_INDEX];
+			final UserStatus status = UserStatus.fromValue(tokens[STATUS_INDEX]);
+
+			if (!isStatusIdSuccess(status)) {
+	            LOG.error("The status is not a valid status");
+	            //To DO: write the audit entry
+	            return;
+			}
 
 			if (type.equals(PATIENT_IDENTIFIER) && assigningAuthority.equals(USVBA)) {
 				if (assigningFacility.equals(CORP_ASSIGNING_FACILITY)) {
@@ -130,5 +156,17 @@ public class CorrelationIdsParser {
 			hmap.put("pnid", tokens[ELEMENT_ID_INDEX]);
 			hmap.put("pnidType", SS);
 		}
+	}
+
+	/**
+	 * Checks if patient identifier's id status is a success.
+	 *
+	 * @param idStatus
+	 *            the id Status
+	 * @return true, if is id Status is success
+	 */
+	private boolean isStatusIdSuccess(final UserStatus idStatus) {
+		return idStatus != null && (idStatus.equals(UserStatus.ACTIVE) || idStatus.equals(UserStatus.PERMANENT)
+				|| idStatus.equals(UserStatus.TEMPORARY));
 	}
 }
