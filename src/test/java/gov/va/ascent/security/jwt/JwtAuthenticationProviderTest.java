@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,6 +26,7 @@ import gov.va.ascent.security.config.AscentSecurityTestConfig;
  */
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = AscentSecurityTestConfig.class)
+@Ignore
 public class JwtAuthenticationProviderTest {
     @Autowired
     JwtAuthenticationProperties jwtAuthenticationProperties;
