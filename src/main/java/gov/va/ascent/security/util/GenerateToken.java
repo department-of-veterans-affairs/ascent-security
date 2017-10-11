@@ -93,7 +93,6 @@ public class GenerateToken {
         personTraits.setIcn("77779102");
         personTraits.setFileNumber("912444689");
         
-        //String[] strArray = {"77779102^NI^200M^USVHA^P","912444689^PI^200BRLS^USVBA^A","6666345^PI^200CORP^USVBA^A","1105051936^NI^200DOD^USDOD^A","912444689^SS"};
         List<String> strArray = Arrays.asList("77779102^NI^200M^USVHA^P","912444689^PI^200BRLS^USVBA^A","6666345^PI^200CORP^USVBA^A","1105051936^NI^200DOD^USDOD^A","912444689^SS");
         personTraits.setCorrelationIds(strArray);
         return personTraits;
