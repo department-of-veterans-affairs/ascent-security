@@ -16,6 +16,9 @@ public enum UserStatus {
 	/** The string value. */
 	private final String status;
 
+	/** The Constant lookup. */
+	private static final Map<String, UserStatus> LOOKUP = new HashMap<>();
+	
 	/**
 	 * Instantiates a new status.
 	 * 
@@ -27,8 +30,6 @@ public enum UserStatus {
 		this.status = status;
 	}
 
-	/** The Constant lookup. */
-	private static final Map<String, UserStatus> LOOKUP = new HashMap<String, UserStatus>();
 
 	/**
 	 * In order to do a lookup of an enum based on it's string value.
