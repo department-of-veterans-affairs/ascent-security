@@ -106,9 +106,12 @@ public class CorrelationIdsParser {
      * @return
      */
 	public Map<String, String> parseCorrelationIds(List<String> list) {
-		for (String token : list) {
+		if (list != null) {
+			for (String token : list) {
 				processToken(token);
+			}
 		}
+
 		return hmap;
 	}
 	
