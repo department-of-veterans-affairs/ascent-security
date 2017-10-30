@@ -27,20 +27,13 @@ public class JwtParser {
     }
 
     public PersonTraits parseJwt(String token){
-        PersonTraits person = null;
 
         Claims claims = null;
-        try {
-            claims = Jwts.parser().setSigningKey(jwtAuthenticationProperties.getSecret())
-                    .requireIssuer("Vets.gov")
-                    .parseClaimsJws(token).getBody();
-            person = getPersonFrom(claims);
+        claims = Jwts.parser().setSigningKey(jwtAuthenticationProperties.getSecret())
+                .requireIssuer("Vets.gov")
+                .parseClaimsJws(token).getBody();
+        return getPersonFrom(claims);
 
-        }catch (JwtException ex){
-            LOG.error("Unable to parse JWT token:", ex);
-            return person;
-        }
-        return person;
     }
 
     private PersonTraits getPersonFrom(final Claims claims){
