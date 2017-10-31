@@ -134,33 +134,63 @@ public class CorrelationIdsParser {
 	            return;
 			}
 
-			if (type.equals(PATIENT_IDENTIFIER) && assigningAuthority.equals(USVBA)) {
-				if (assigningFacility.equals(CORP_ASSIGNING_FACILITY)) {
-					hmap.put("pid", elementId);
-				} else if (assigningFacility.equals(BIRLS_ASSIGNING_FACILITY)) {
-					hmap.put("fileNumber", elementId);
-				}
-			}
+			determinePidAndFileNumber(elementId, type, assigningAuthority, assigningFacility);
+			determineEdipiAndIcn(elementId, type, assigningAuthority, assigningFacility);
+			determinePnIDAndPnIdType(elementId, type, assigningAuthority);
 
-			if (type.equals(NATIONAL_IDENTIFIER)) {
-				if (assigningFacility.equals(USDOD_ASSIGNING_FACILITY) && assigningAuthority.equals(USDOD)) {
-					hmap.put("dodedipnid", elementId);
-				}
-				if (assigningFacility.equals(ICN_ASSIGNING_FACILITY) && assigningAuthority.equals(USVHA)) {
-					hmap.put("icn", elementId);
-				}
-			}
-
-			if (type.equals(SS) && assigningAuthority.equals(USVBA)) {
-				hmap.put("pnid", elementId);
-				hmap.put("pnidType", type);
-			}
 		} else if (tokens.length == SS_FIELD_COUNT) {
 			hmap.put("pnid", tokens[ELEMENT_ID_INDEX]);
 			hmap.put("pnidType", SS);
 		}
 	}
 
+	/**
+	 * 
+	 * @param elementId
+	 * @param type
+	 * @param assigningAuthority
+	 * @param assigningFacility
+	 */
+	private void determinePidAndFileNumber(String elementId, String type, String assigningAuthority, String assigningFacility) {
+		if (type.equals(PATIENT_IDENTIFIER) && assigningAuthority.equals(USVBA)) {
+			if (assigningFacility.equals(CORP_ASSIGNING_FACILITY)) {
+				hmap.put("pid", elementId);
+			} else if (assigningFacility.equals(BIRLS_ASSIGNING_FACILITY)) {
+				hmap.put("fileNumber", elementId);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param elementId
+	 * @param type
+	 * @param assigningAuthority
+	 * @param assigningFacility
+	 */
+	private void determineEdipiAndIcn(String elementId, String type, String assigningAuthority, String assigningFacility) {
+		if (type.equals(NATIONAL_IDENTIFIER)) {
+			if (assigningFacility.equals(USDOD_ASSIGNING_FACILITY) && assigningAuthority.equals(USDOD)) {
+				hmap.put("dodedipnid", elementId);
+			}
+			if (assigningFacility.equals(ICN_ASSIGNING_FACILITY) && assigningAuthority.equals(USVHA)) {
+				hmap.put("icn", elementId);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param elementId
+	 * @param type
+	 * @param assigningAuthority
+	 */
+	private void determinePnIDAndPnIdType(String elementId, String type, String assigningAuthority) {
+		if (type.equals(SS) && assigningAuthority.equals(USVBA)) {
+			hmap.put("pnid", elementId);
+			hmap.put("pnidType", type);
+		}
+	}	
 	/**
 	 * Checks if patient identifier's id status is a success.
 	 *
