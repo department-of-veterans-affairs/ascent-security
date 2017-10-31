@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import gov.va.ascent.framework.security.PersonTraits;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
 /**
@@ -17,8 +16,6 @@ import io.jsonwebtoken.Jwts;
  */
 
 public class JwtParser {
-
-    private static final Logger LOG = LoggerFactory.getLogger(JwtParser.class);
 
     private JwtAuthenticationProperties jwtAuthenticationProperties;
 
