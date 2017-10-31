@@ -4,9 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gov.va.ascent.framework.security.PersonTraits;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
