@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -76,25 +77,15 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	 * @param request - original request
 	 */
 	private void writeAuditForJwtTokenErrors(String cause, HttpServletRequest request) {
-		StringBuilder buffer = new StringBuilder();
-		BufferedReader reader = null;
+		String message = "";
 		try {
-			reader = request.getReader();
+			message = IOUtils.toString(request.getReader());
 		} catch (IOException e) {
 			LOG.error("Error while reading the request {}", e);
 		}
-		String line;
-		try {
-			if (reader != null) {
-				while ((line = reader.readLine()) != null) {
-					buffer.append(line);
-				}
-			}
-		} catch (IOException e) {
-			LOG.error("Error while reading the request {}", e);
-		}
-		String data = buffer.toString();
-		AuditData auditData = new AuditData(AuditEvents.SECURITY, cause, JwtAuthenticationFilter.class.getName());
+
+		String data = cause.concat(" Request: ").concat(message);
+		AuditData auditData = new AuditData(AuditEvents.SECURITY, "JwtAuthenticationFilter#attemptAuthentication", JwtAuthenticationFilter.class.getName());
 		AuditLogger.error(auditData, data);
 	}
 

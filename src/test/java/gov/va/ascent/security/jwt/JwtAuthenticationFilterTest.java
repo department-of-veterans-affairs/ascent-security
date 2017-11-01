@@ -44,7 +44,6 @@ public class JwtAuthenticationFilterTest {
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
                 new JwtAuthenticationSuccessHandler(),provider);
 
-
         Authentication result = filter.attemptAuthentication(request,
                 new MockHttpServletResponse());
         Assert.assertTrue(result != null);
