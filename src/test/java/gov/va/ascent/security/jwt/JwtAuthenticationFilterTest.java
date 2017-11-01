@@ -44,7 +44,6 @@ public class JwtAuthenticationFilterTest {
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
                 new JwtAuthenticationSuccessHandler(),provider);
 
-
         Authentication result = filter.attemptAuthentication(request,
                 new MockHttpServletResponse());
         Assert.assertTrue(result != null);
@@ -64,4 +63,45 @@ public class JwtAuthenticationFilterTest {
                 new MockHttpServletResponse());
     }
 
+    @Test
+    public void testTamperedException() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
+        String content = "{\n" + 
+        		"  \"participantID\": 0,\n" + 
+        		"  \"ssn\": \"string\"\n" + 
+        		"}";
+        request.setContent(content.getBytes());
+        request.addHeader("Authorization", "Bearer "+ GenerateToken.generateJwt() + "s");
+
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
+                new JwtAuthenticationSuccessHandler(),provider);
+
+        try {
+			Authentication result = filter.attemptAuthentication(request,
+			        new MockHttpServletResponse());
+		} catch (Exception e) {
+			Assert.assertTrue(e.getMessage().contains("Tampered"));
+		}
+    }
+    
+    
+    @Test
+    public void testMalformedException() throws Exception {
+    	 MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
+         String content = "{\n" + 
+         		"  \"participantID\": 0,\n" + 
+         		"  \"ssn\": \"string\"\n" + 
+         		"}";
+        request.setContent(content.getBytes());
+        request.addHeader("Authorization", "Bearer malformedToken");
+
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
+                new JwtAuthenticationSuccessHandler(),provider);
+        try {
+			Authentication result = filter.attemptAuthentication(request,
+			        new MockHttpServletResponse());
+		} catch (Exception e) {
+			Assert.assertTrue(e.getMessage().contains("Malformed"));
+		}
+    }
 }
