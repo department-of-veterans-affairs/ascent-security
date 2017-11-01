@@ -18,7 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.TokenResource;
 import gov.va.ascent.security.config.AscentSecurityTestConfig;
-import io.jsonwebtoken.MalformedJwtException;
 
 /**
  *
@@ -58,7 +57,7 @@ public class JwtAuthenticationProviderTest {
     /**
      * Test of retrieveUser method, of class JwtAuthenticationProvider.
      */
-    @Test(expected = MalformedJwtException.class) 
+    @Test(expected = JwtAuthenticationException.class) 
     public void testRetrieveUserWithException() {
         System.out.println("retrieveUser");
 		

@@ -4,8 +4,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gov.va.ascent.framework.security.PersonTraits;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
 /**
@@ -14,6 +18,8 @@ import io.jsonwebtoken.Jwts;
 
 public class JwtParser {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JwtParser.class);
+
     private JwtAuthenticationProperties jwtAuthenticationProperties;
 
     public JwtParser(JwtAuthenticationProperties properties){
@@ -21,13 +27,20 @@ public class JwtParser {
     }
 
     public PersonTraits parseJwt(String token){
+        PersonTraits person = null;
 
         Claims claims = null;
-        claims = Jwts.parser().setSigningKey(jwtAuthenticationProperties.getSecret())
-                .requireIssuer("Vets.gov")
-                .parseClaimsJws(token).getBody();
-        return getPersonFrom(claims);
+        try {
+            claims = Jwts.parser().setSigningKey(jwtAuthenticationProperties.getSecret())
+                    .requireIssuer("Vets.gov")
+                    .parseClaimsJws(token).getBody();
+            person = getPersonFrom(claims);
 
+        }catch (JwtException ex){
+            LOG.error("Unable to parse JWT token:", ex);
+            return person;
+        }
+        return person;
     }
 
     private PersonTraits getPersonFrom(final Claims claims){
