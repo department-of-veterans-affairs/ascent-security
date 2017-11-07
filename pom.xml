@@ -9,12 +9,21 @@
     </parent>
 
     <artifactId>ascent-security</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-
     <name>${project.artifactId}</name>
-    <description>Project for Spring Security using JWT</description>
+    <description>Ascent Security</description>
+    
+    <properties>
+	    <ascent.framework.version>0.0.1-SNAPSHOT</ascent.framework.version>
+  	</properties>
 
     <dependencies>
+    		<!-- Apache Common IO dependency -->
+	   	<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -31,7 +40,7 @@
         <dependency>
             <groupId>gov.va.ascent</groupId>
             <artifactId>ascent-framework</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${ascent.framework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
