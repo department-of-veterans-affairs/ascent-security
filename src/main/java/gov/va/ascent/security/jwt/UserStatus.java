@@ -57,11 +57,7 @@ public enum UserStatus {
 	 * @return the enumeration
 	 */
 	public static UserStatus fromValue(final String stringValue) {
-		UserStatus status = LOOKUP.get(stringValue);
-		if (status == null) {
-			status = valueOf(stringValue);
-		}
-		return status;
+		return LOOKUP.get(stringValue);
 	}
 
 }

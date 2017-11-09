@@ -128,10 +128,14 @@ public class CorrelationIdsParser {
 			final String assigningAuthority = tokens[ISSUER_INDEX];
 			final UserStatus status = UserStatus.fromValue(tokens[STATUS_INDEX]);
 
-			if (!isStatusIdSuccess(status)) {
-	            LOG.error("The status is not a valid status");
-	            //To DO: write the audit entry
-	            return;
+			if (status == null) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("Id: ").append(elementId).append(", Id Type: ").append(type).append(", Assigning Facility: ")
+						.append(assigningFacility).append(", Assigning Authority: ").append(assigningAuthority)
+						.append(", Id Status: ").append(tokens[STATUS_INDEX]);
+
+				LOG.warn("The status of the id is invalid - {}", sb.toString());
+				return;
 			}
 
 			determinePidAndFileNumber(elementId, type, assigningAuthority, assigningFacility);
@@ -191,15 +195,4 @@ public class CorrelationIdsParser {
 			hmap.put("pnidType", type);
 		}
 	}	
-	/**
-	 * Checks if patient identifier's id status is a success.
-	 *
-	 * @param idStatus
-	 *            the id Status
-	 * @return true, if is id Status is success
-	 */
-	private boolean isStatusIdSuccess(final UserStatus idStatus) {
-		return idStatus != null && (idStatus.equals(UserStatus.ACTIVE) || idStatus.equals(UserStatus.PERMANENT)
-				|| idStatus.equals(UserStatus.TEMPORARY));
-	}
 }

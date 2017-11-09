@@ -109,4 +109,22 @@ public class CorrelationIdsParserTest {
 		assertTrue(result.get("pnid") == null);
 		assertTrue(result.get("pnidType") == null);
 	}
+	
+	
+    /**
+     * Test of parseCorrelationIds method, of class CorrelationIdsParser.
+     */
+	@Test
+	public void testProcessToken() {
+		System.out.println("processToken");
+		List<String> strArray = Arrays.asList("1020212383V608753^NI^200M^USVBA^M");
+		CorrelationIdsParser instance = new CorrelationIdsParser();
+		Map<String, String> result = instance.parseCorrelationIds(strArray);
+		assertTrue(result.get("icn") == null);
+		assertTrue(result.get("dodedipnid") == null);
+		assertTrue(result.get("fileNumber") == null);
+		assertTrue(result.get("pid") == null);
+		assertTrue(result.get("pnid") == null);
+		assertTrue(result.get("pnidType") == null);
+	}
 }
