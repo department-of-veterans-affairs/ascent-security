@@ -1,6 +1,5 @@
 package gov.va.ascent.security.jwt;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,7 +84,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		}
 
 		String data = cause.concat(" Request: ").concat(message);
-		AuditData auditData = new AuditData(AuditEvents.SECURITY, "JwtAuthenticationFilter#attemptAuthentication", JwtAuthenticationFilter.class.getName());
+		AuditData auditData = new AuditData(AuditEvents.SECURITY, "attemptAuthentication", JwtAuthenticationFilter.class.getName());
 		AuditLogger.error(auditData, data);
 	}
 
