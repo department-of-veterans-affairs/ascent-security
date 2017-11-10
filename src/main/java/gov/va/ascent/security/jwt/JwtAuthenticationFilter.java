@@ -22,7 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import gov.va.ascent.framework.audit.AuditData;
+import gov.va.ascent.framework.audit.AuditEventData;
 import gov.va.ascent.framework.audit.AuditEvents;
 import gov.va.ascent.framework.audit.AuditLogger;
 import io.jsonwebtoken.MalformedJwtException;
@@ -84,7 +84,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		}
 
 		String data = cause.concat(" Request: ").concat(message);
-		AuditData auditData = new AuditData(AuditEvents.SECURITY, "attemptAuthentication", JwtAuthenticationFilter.class.getName());
+		AuditEventData auditData = new AuditEventData(AuditEvents.SECURITY, "attemptAuthentication", JwtAuthenticationFilter.class.getName());
 		AuditLogger.error(auditData, data);
 	}
 
