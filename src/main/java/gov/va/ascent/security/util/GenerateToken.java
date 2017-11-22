@@ -25,15 +25,15 @@ public class GenerateToken {
     }
 
     public static String generateJwt(){
-        return generateJwt(person(),300, secret);
+        return generateJwt(person(),900, secret);
     }
 
     public static String generateJwt(PersonTraits person, String secret){
-        return generateJwt(person, 300, secret);
+        return generateJwt(person, 900, secret);
     }
 
     public static String generateJwt(PersonTraits person){
-        return generateJwt(person, 300, secret);
+        return generateJwt(person, 900, secret);
     }
 
     public static String generateJwt(int expireInsec){
