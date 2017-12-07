@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
+import org.springframework.web.bind.WebDataBinder;
 
 /**
  *
@@ -35,9 +36,6 @@ public class TokenResourceTest {
 	@Autowired
 	AuthenticationProvider provider;
 
-	public TokenResourceTest() {
-	}
-
 	/**
 	 * Test of getToken method, of class TokenResource.
 	 */
@@ -52,4 +50,16 @@ public class TokenResourceTest {
 		assertTrue(result.length() > 0);
 
 	}
+
+    /**
+     * Test of initBinder method, of class TokenResource.
+     */
+    @Test
+    public void testInitBinder() {
+        System.out.println("initBinder");
+        WebDataBinder binder = new WebDataBinder(null, null);
+        TokenResource instance = new TokenResource();
+        instance.initBinder(binder);
+        assertTrue(binder.getAllowedFields().length > 0);
+    }
 }
