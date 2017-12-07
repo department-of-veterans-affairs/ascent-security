@@ -4,7 +4,6 @@ import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.jwt.JwtAuthenticationProperties;
 import gov.va.ascent.security.util.GenerateToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
