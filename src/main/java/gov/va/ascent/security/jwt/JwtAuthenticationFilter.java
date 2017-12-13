@@ -1,6 +1,7 @@
 package gov.va.ascent.security.jwt;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -61,11 +62,11 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 		try {
 			return getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
-		} catch (SignatureException signatureException) {
-			writeAuditForJwtTokenErrors("Tampered Token: " + token, request);
+		}  catch (SignatureException signatureException) {
+			writeAuditForJwtTokenErrors("Tampered Token: " + token + "\nSignatureException: " + signatureException, request);
 			throw new JwtAuthenticationException("Tampered Token");
 		} catch (MalformedJwtException ex) {
-			writeAuditForJwtTokenErrors("Malformed Token: " + token, request);
+			writeAuditForJwtTokenErrors("Malformed Token: " + token + "\nMalformedJwtException: " + ex, request);
 			throw new JwtAuthenticationException("Malformed Token");
 		}
 	}
@@ -78,7 +79,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	private void writeAuditForJwtTokenErrors(String cause, HttpServletRequest request) {
 		String message = "";
 		try {
-			message = IOUtils.toString(request.getReader());
+			message = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			LOG.error("Error while reading the request {}", e);
 		}
