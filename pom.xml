@@ -13,10 +13,6 @@
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
     <description>Ascent Security</description>
-    
-    <properties>
-	    <ascent.framework.version>0.0.1-SNAPSHOT</ascent.framework.version>
-  	</properties>
 
     <dependencies>
     		<!-- Apache Common IO dependency -->
@@ -40,7 +36,7 @@
         <dependency>
             <groupId>gov.va.ascent</groupId>
             <artifactId>ascent-framework</artifactId>
-            <version>${ascent.framework.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
