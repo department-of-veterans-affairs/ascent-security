@@ -1,5 +1,7 @@
 package gov.va.ascent.security.util;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,11 +9,11 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import javax.crypto.spec.SecretKeySpec;
 
 import gov.va.ascent.framework.security.PersonTraits;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * Created by vgadda on 5/5/17.
@@ -21,7 +23,7 @@ public class GenerateToken {
 	private static String secret = "secret";
 
     public static void main(String[] args) {
-        secret = "vetsGov";
+        secret = "vetsgov";
     }
 
     public static String generateJwt(){
@@ -46,7 +48,13 @@ public class GenerateToken {
         Calendar expiration = GregorianCalendar.getInstance();
         expiration.setTime(currentTime.getTime());
         expiration.add(Calendar.SECOND, expireInsec);
-
+        
+        //The JWT signature algorithm we will be using to sign the token
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        
+        //We will sign our JWT with our ApiKey secret
+        Key signingKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), signatureAlgorithm.getJcaName());
+	
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setIssuer("Vets.gov")
@@ -70,7 +78,7 @@ public class GenerateToken {
                 .claim("icn", person.getIcn())
                 .claim("fileNumber", person.getFileNumber())
                 .claim("correlationIds", person.getCorrelationIds())
-                .signWith(SignatureAlgorithm.HS256, secret).compact();
+        		.signWith(signatureAlgorithm, signingKey).compact();
     }
 
     

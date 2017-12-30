@@ -1,12 +1,17 @@
 package gov.va.ascent.security.jwt;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.spec.SecretKeySpec;
+
 import gov.va.ascent.framework.security.PersonTraits;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * Created by vgadda on 5/4/17.
@@ -21,9 +26,18 @@ public class JwtParser {
     }
 
     public PersonTraits parseJwt(String token){
-
-        Claims claims = null;
-        claims = Jwts.parser().setSigningKey(jwtAuthenticationProperties.getSecret())
+    	Claims claims = null;
+        
+        //The JWT signature algorithm we will be using to sign the token
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        
+        //We will sign our JWT with our ApiKey secret
+        Key signingKey = new SecretKeySpec(
+        					jwtAuthenticationProperties.getSecret().getBytes(StandardCharsets.UTF_8), 
+        						signatureAlgorithm.getJcaName());
+        
+        claims = Jwts.parser()
+        		.setSigningKey(signingKey)
                 .requireIssuer("Vets.gov")
                 .parseClaimsJws(token).getBody();
         return getPersonFrom(claims);
@@ -44,7 +58,8 @@ public class JwtParser {
         personTraits.setEmail(claims.get("email", String.class));
         
         CorrelationIdsParser instance = new CorrelationIdsParser();
-        List<String> list = (List<String>) claims.get("correlationIds");
+        @SuppressWarnings("unchecked")
+		List<String> list = (List<String>) claims.get("correlationIds");
         Map<String, String> result = instance.parseCorrelationIds(list);
         
         personTraits.setCorrelationIds(list);
