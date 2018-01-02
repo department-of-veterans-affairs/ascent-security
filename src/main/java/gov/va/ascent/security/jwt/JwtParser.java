@@ -2,7 +2,6 @@ package gov.va.ascent.security.jwt;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,9 +51,9 @@ public class JwtParser {
         personTraits.setPrefix(claims.get("prefix", String.class));
         personTraits.setMiddleName(claims.get("middleName", String.class));
         personTraits.setSuffix(claims.get("suffix", String.class));
-        personTraits.setBirthDate(claims.get("birthDate", Date.class));
+        personTraits.setBirthDate(claims.get("birthDate", String.class));
         personTraits.setGender(claims.get("gender", String.class));
-        personTraits.setAssuranceLevel(claims.get("assuranceLevel", String.class));
+        personTraits.setAssuranceLevel(claims.get("assuranceLevel", Integer.class));
         personTraits.setEmail(claims.get("email", String.class));
         
         CorrelationIdsParser instance = new CorrelationIdsParser();
