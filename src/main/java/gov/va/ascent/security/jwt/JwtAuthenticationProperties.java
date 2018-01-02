@@ -13,7 +13,7 @@ public class JwtAuthenticationProperties {
     private String secret = "secret";
     private String filterProcessUrl = "/**";
     private String[] excludeUrls = {"/v2/api-docs/**", "/configuration/ui/**", "/swagger-resources/**",
-            "/configuration/security/**", "/swagger-ui.html", "/webjars/**", "/**/token"};
+            "/configuration/security/**", "/swagger-ui.html", "/webjars/**", "/**/token", "/**/swagger/error-keys.html"};
 
     public static final int AUTH_ORDER = SecurityProperties.BASIC_AUTH_ORDER - 2;
     public static final int NO_AUTH_ORDER = AUTH_ORDER + 1;
