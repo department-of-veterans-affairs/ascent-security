@@ -19,7 +19,7 @@ public class TokenResource {
 
 	@RequestMapping(value = "/token", method = RequestMethod.POST, consumes = {"application/json"})
 	public String getToken(@RequestBody PersonTraits person){
-		return GenerateToken.generateJwt(person, jwtAuthenticationProperties.getSecret());
+		return GenerateToken.generateJwt(person, jwtAuthenticationProperties.getSecret(), jwtAuthenticationProperties.getIssuer());
 	}
 	
 	/**

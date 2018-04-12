@@ -35,7 +35,8 @@ public class GenerateTokenTest {
     public void testGenerateJwt_PersonTraits_String() {
         PersonTraits person = new PersonTraits();
         String secret = "test";
-        String result = GenerateToken.generateJwt(person, secret);
+        String issuer = "Vets.gov";
+        String result = GenerateToken.generateJwt(person, secret, issuer);
         assertNotNull(result);
     }
 
@@ -67,7 +68,8 @@ public class GenerateTokenTest {
         PersonTraits person = new PersonTraits();
         int expireInsec = 10;
         String secret = "test";
-        String result = GenerateToken.generateJwt(person, expireInsec, secret);
+        String issuer = "Vets.gov";
+        String result = GenerateToken.generateJwt(person, expireInsec, secret, issuer);
         assertNotNull(result);
     }
 

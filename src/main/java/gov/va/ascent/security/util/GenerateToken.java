@@ -20,29 +20,30 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class GenerateToken {
     
 	private static String secret = "secret";
+	private static String issuer = "Vets.gov";
 
     public static void main(String[] args) {
         secret = "vetsgov";
     }
 
     public static String generateJwt(){
-        return generateJwt(person(),900, secret);
+        return generateJwt(person(),900, secret, issuer);
     }
 
-    public static String generateJwt(PersonTraits person, String secret){
-        return generateJwt(person, 900, secret);
+    public static String generateJwt(PersonTraits person, String secret, String issuer){
+        return generateJwt(person, 900, secret, issuer);
     }
 
     public static String generateJwt(PersonTraits person){
-        return generateJwt(person, 900, secret);
+        return generateJwt(person, 900, secret, issuer);
     }
 
     public static String generateJwt(int expireInsec){
-        return generateJwt(person(), expireInsec, secret);
+        return generateJwt(person(), expireInsec, secret, issuer);
     }
 
 
-    public static String generateJwt(PersonTraits person, int expireInsec, String secret){
+    public static String generateJwt(PersonTraits person, int expireInsec, String secret, String issuer){
         Calendar currentTime = GregorianCalendar.getInstance();
         Calendar expiration = GregorianCalendar.getInstance();
         expiration.setTime(currentTime.getTime());
@@ -56,7 +57,7 @@ public class GenerateToken {
 	
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .setIssuer("Vets.gov")
+                .setIssuer(issuer)
                 .setIssuedAt(currentTime.getTime())
                 .setId(UUID.randomUUID().toString())
                 .setExpiration(expiration.getTime())
