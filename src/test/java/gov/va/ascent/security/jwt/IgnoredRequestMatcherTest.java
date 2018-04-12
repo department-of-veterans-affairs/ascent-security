@@ -28,7 +28,6 @@ public class IgnoredRequestMatcherTest {
      */
     @Test
     public void testMatches() {
-        System.out.println("matches");
         String[] ignoreUrls = {"http://localhost:8762/api/ascent-demo-service/swagger-ui.html"};
 
         IgnoredRequestMatcher instance = new IgnoredRequestMatcher("baselineMatches",  ignoreUrls);
@@ -46,7 +45,6 @@ public class IgnoredRequestMatcherTest {
      */
     @Test
     public void testBaselineMatches() {
-        System.out.println("matches");
         RequestMatcher ignoreReqMatch = new AntPathRequestMatcher("http://localhost:8762/api/ascent-demo-service/swagger-ui.htmls");
         RequestMatcher baselineMatches = new AntPathRequestMatcher("http://localhost:8762/api");
         IgnoredRequestMatcher instance = new IgnoredRequestMatcher(baselineMatches,  ignoreReqMatch);

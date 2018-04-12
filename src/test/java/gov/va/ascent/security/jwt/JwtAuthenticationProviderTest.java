@@ -41,7 +41,6 @@ public class JwtAuthenticationProviderTest {
      */
     @Test
     public void testRetrieveUser() {
-        System.out.println("retrieveUser");
         String username = "jdoe";
 		PersonTraits person = new PersonTraits();
 		person.setFirstName("john");
@@ -60,7 +59,6 @@ public class JwtAuthenticationProviderTest {
      */
     @Test(expected = MalformedJwtException.class) 
     public void testRetrieveUserWithException() {
-        System.out.println("retrieveUser");
 		
         JwtAuthenticationToken authentication = new JwtAuthenticationToken("test");
         JwtParser parser = new JwtParser(jwtAuthenticationProperties);

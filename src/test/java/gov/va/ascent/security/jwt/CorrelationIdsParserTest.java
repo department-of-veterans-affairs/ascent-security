@@ -23,7 +23,6 @@ public class CorrelationIdsParserTest {
      */
 	@Test
 	public void testParseCorrelationIds() {
-		System.out.println("processMainToken");
         List<String> strArray = Arrays.asList("1020212383V608753^NI^200M^USVHA^P","100001412^PI^200BRLS^USVBA^A","20120203003^PI^200CORP^USVBA^A","1025062341^NI^200DOD^USDOD^A","123456789^SS");
 		CorrelationIdsParser instance = new CorrelationIdsParser();
 		Map<String, String> result = instance.parseCorrelationIds(strArray);
@@ -79,7 +78,6 @@ public class CorrelationIdsParserTest {
      */
 	@Test
 	public void testParseCorrelationIds4() {
-		System.out.println("processMainToken");
 		List<String> strArray = Arrays.asList("1020212383V608753^NI^200M^USVBA^P","100001412^MI^200BRLS^USVBA^A","20120203003^MI^200CORP^USVBA^A","1025062341^PI^200DOD^USDOD^A","123456789^XX");
 		CorrelationIdsParser instance = new CorrelationIdsParser();
 		Map<String, String> result = instance.parseCorrelationIds(strArray);
@@ -98,7 +96,6 @@ public class CorrelationIdsParserTest {
      */
 	@Test
 	public void testParseCorrelationIds5() {
-		System.out.println("processMainToken");
 		List<String> strArray = Arrays.asList("1020212383V608753^NI^200M^USVBA^P");
 		CorrelationIdsParser instance = new CorrelationIdsParser();
 		Map<String, String> result = instance.parseCorrelationIds(strArray);
@@ -116,7 +113,6 @@ public class CorrelationIdsParserTest {
      */
 	@Test
 	public void testProcessToken() {
-		System.out.println("processToken");
 		List<String> strArray = Arrays.asList("1020212383V608753^NI^200M^USVBA^M");
 		CorrelationIdsParser instance = new CorrelationIdsParser();
 		Map<String, String> result = instance.parseCorrelationIds(strArray);

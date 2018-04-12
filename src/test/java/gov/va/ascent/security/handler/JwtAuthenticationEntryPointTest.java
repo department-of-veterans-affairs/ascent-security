@@ -27,7 +27,6 @@ public class JwtAuthenticationEntryPointTest {
      */
     @Test
     public void testCommence() throws Exception {
-        System.out.println("commence");
         MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
 		MockHttpServletResponse response = new MockHttpServletResponse();
         JwtAuthenticationEntryPoint instance = new JwtAuthenticationEntryPoint();

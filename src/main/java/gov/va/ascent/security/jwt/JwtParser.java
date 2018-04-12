@@ -37,7 +37,7 @@ public class JwtParser {
         
         claims = Jwts.parser()
         		.setSigningKey(signingKey)
-                .requireIssuer("Vets.gov")
+                .requireIssuer(jwtAuthenticationProperties.getIssuer())
                 .parseClaimsJws(token).getBody();
         return getPersonFrom(claims);
 

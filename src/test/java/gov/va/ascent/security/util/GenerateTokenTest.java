@@ -23,7 +23,6 @@ public class GenerateTokenTest {
      */
     @Test
     public void testGenerateJwt_0args() {
-        System.out.println("generateJwt");
         String expResult = "";
         String result = GenerateToken.generateJwt();
         assertNotNull(expResult, result);
@@ -34,7 +33,6 @@ public class GenerateTokenTest {
      */
     @Test
     public void testGenerateJwt_PersonTraits_String() {
-        System.out.println("generateJwt");
         PersonTraits person = new PersonTraits();
         String secret = "test";
         String result = GenerateToken.generateJwt(person, secret);
@@ -46,7 +44,6 @@ public class GenerateTokenTest {
      */
     @Test
     public void testGenerateJwt_PersonTraits() {
-        System.out.println("generateJwt");
         PersonTraits person = new PersonTraits();
         String result = GenerateToken.generateJwt(person);
         assertNotNull(result);
@@ -57,7 +54,6 @@ public class GenerateTokenTest {
      */
     @Test
     public void testGenerateJwt_int() {
-        System.out.println("generateJwt");
         int expireInsec = 0;
         String result = GenerateToken.generateJwt(expireInsec);
         assertNotNull(result);
@@ -68,7 +64,6 @@ public class GenerateTokenTest {
      */
     @Test
     public void testGenerateJwt_3args() {
-        System.out.println("generateJwt");
         PersonTraits person = new PersonTraits();
         int expireInsec = 10;
         String secret = "test";
@@ -81,7 +76,6 @@ public class GenerateTokenTest {
      */
     @Test
     public void testPerson() {
-        System.out.println("person");
         PersonTraits result = GenerateToken.person();
         assertEquals("JANE", result.getFirstName());
     }

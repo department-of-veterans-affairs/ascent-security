@@ -41,8 +41,6 @@ public class TokenResourceTest {
 	 */
 	@Test
 	public void testGetToken() {
-
-		System.out.println("getToken");
 		PersonTraits person = new PersonTraits();
 		person.setFirstName("john");
 		person.setLastName("doe");
@@ -56,7 +54,6 @@ public class TokenResourceTest {
      */
     @Test
     public void testInitBinder() {
-        System.out.println("initBinder");
         WebDataBinder binder = new WebDataBinder(null, null);
         TokenResource instance = new TokenResource();
         instance.initBinder(binder);

@@ -25,7 +25,6 @@ public class JwtAuthenticationSuccessHandlerTest {
      */
     @Test
     public void testOnAuthenticationSuccess() throws Exception {
-        System.out.println("onAuthenticationSuccess");
         HttpServletRequest request = null;
         HttpServletResponse response = null;
         Authentication authentication = null;

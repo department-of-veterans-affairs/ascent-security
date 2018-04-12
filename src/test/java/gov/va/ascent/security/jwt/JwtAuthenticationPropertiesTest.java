@@ -34,7 +34,6 @@ public class JwtAuthenticationPropertiesTest {
      */
     @Test
     public void testIsEnabled() {
-        System.out.println("isEnabled");
         boolean expResult = true;
         boolean result = jwtAuthenticationProperties.isEnabled();
         assertEquals(expResult, result);
@@ -45,7 +44,6 @@ public class JwtAuthenticationPropertiesTest {
      */
     @Test
     public void testSetEnabled() {
-        System.out.println("setEnabled");
         boolean enabled = true;
         jwtAuthenticationProperties.setEnabled(enabled);
         assertTrue(jwtAuthenticationProperties.isEnabled());
@@ -56,7 +54,6 @@ public class JwtAuthenticationPropertiesTest {
      */
     @Test
     public void testGetHeader() {
-        System.out.println("getHeader");
         String expResult = "Authorization";
         String result = jwtAuthenticationProperties.getHeader();
         assertTrue(expResult.equals(result));
@@ -67,7 +64,6 @@ public class JwtAuthenticationPropertiesTest {
      */
     @Test
     public void testGetSecret() {
-        System.out.println("getSecret");
         JwtAuthenticationProperties jwtAuthenticationProperties = new JwtAuthenticationProperties();
         String expResult = "secret";
         String result = jwtAuthenticationProperties.getSecret();
@@ -79,10 +75,30 @@ public class JwtAuthenticationPropertiesTest {
      */
     @Test
     public void testSetSecret() {
-        System.out.println("setSecret");
-        String secret = "secret";
+        String secret = "secret_key_consumer";
         jwtAuthenticationProperties.setSecret(secret);
         assertTrue(secret.equals(jwtAuthenticationProperties.getSecret()));
+    }
+    
+    /**
+     * Test of getIssuer method, of class JwtAuthenticationProperties.
+     */
+    @Test
+    public void testGetIssuer() {
+        JwtAuthenticationProperties jwtAuthenticationProperties = new JwtAuthenticationProperties();
+        String expResult = "Vets.gov";
+        String result = jwtAuthenticationProperties.getIssuer();
+        assertTrue(expResult.equals(result));
+    }
+
+    /**
+     * Test of setSecret method, of class JwtAuthenticationProperties.
+     */
+    @Test
+    public void testSetIssuer() {
+        String issuer = "Issuer2.gov";
+        jwtAuthenticationProperties.setSecret(issuer);
+        assertTrue(issuer.equals(jwtAuthenticationProperties.getSecret()));
     }
 
     /**
@@ -90,7 +106,6 @@ public class JwtAuthenticationPropertiesTest {
      */
     @Test
     public void testGetFilterProcessUrl() {
-        System.out.println("getFilterProcessUrl");
         String expResult = "url";
         String result = jwtAuthenticationProperties.getFilterProcessUrl();
         assertTrue(expResult.equals(result));
@@ -101,7 +116,6 @@ public class JwtAuthenticationPropertiesTest {
      */
     @Test
     public void testSetFilterProcessUrl() {
-        System.out.println("setFilterProcessUrl");
         String filterProcessUrl = "url";
         jwtAuthenticationProperties.setFilterProcessUrl(filterProcessUrl);
         assertTrue(filterProcessUrl.equals(jwtAuthenticationProperties.getFilterProcessUrl()));
@@ -112,7 +126,6 @@ public class JwtAuthenticationPropertiesTest {
      */
     @Test
     public void testGetExcludeUrls() {
-        System.out.println("getExcludeUrls");
         String[] result = jwtAuthenticationProperties.getExcludeUrls();
         assertTrue(result.length > 0);
     }
@@ -122,7 +135,6 @@ public class JwtAuthenticationPropertiesTest {
      */
     @Test
     public void testSetExcludeUrls() {
-        System.out.println("setExcludeUrls");
         String[] excludeUrls = {"http://localhost:8762/api/ascent-demo-service/swagger-ui.html"};
         jwtAuthenticationProperties.setExcludeUrls(excludeUrls);
         assertTrue(jwtAuthenticationProperties.getExcludeUrls().length > 0);

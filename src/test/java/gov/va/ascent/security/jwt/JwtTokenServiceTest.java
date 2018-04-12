@@ -41,8 +41,6 @@ public class JwtTokenServiceTest {
 	 */
 	@Test
 	public void testGetTokenFromRequest() {
-		System.out.println("getTokenFromRequest");
-		
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpSession session = new MockHttpSession();
 		request.setSession(session);
@@ -51,7 +49,6 @@ public class JwtTokenServiceTest {
 		RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 		
 		Map<String, String> result = jwtTokenService.getTokenFromRequest();
-		System.out.println("size is:" + result.size());
 		assertEquals(1,result.size());
 		assertTrue(result.containsKey("Authorization"));
 	}
@@ -62,8 +59,6 @@ public class JwtTokenServiceTest {
 	 */
 	@Test
 	public void testGetTokenFromRequestZeroResult() {
-		System.out.println("getTokenFromRequest");
-		
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpSession session = new MockHttpSession();
 		request.setSession(session);
@@ -71,7 +66,6 @@ public class JwtTokenServiceTest {
 		RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 		
 		Map<String, String> result = jwtTokenService.getTokenFromRequest();
-		System.out.println("size is:" + result.size());
 		assertEquals(0,result.size());
 	}
 }

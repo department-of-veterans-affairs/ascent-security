@@ -15,7 +15,11 @@
     <description>Ascent Security</description>
 
     <dependencies>
-    		<!-- Apache Common IO dependency -->
+        <dependency>
+            <groupId>gov.va.ascent</groupId>
+            <artifactId>ascent-framework</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency>
 	   	<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -31,12 +35,7 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.7.0</version>
-        </dependency>
-        <dependency>
-            <groupId>gov.va.ascent</groupId>
-            <artifactId>ascent-framework</artifactId>
-            <version>0.0.5-SNAPSHOT</version>
+            <version>0.9.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
