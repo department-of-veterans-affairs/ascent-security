@@ -7,7 +7,6 @@ package gov.va.ascent.security.handler;
 
 import static org.mockito.Mockito.mock;
 
-import javax.servlet.http.HttpServletResponse;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;

@@ -63,6 +63,6 @@ public class JwtAuthenticationProviderTest {
         JwtAuthenticationToken authentication = new JwtAuthenticationToken("test");
         JwtParser parser = new JwtParser(jwtAuthenticationProperties);
         JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);    
-        UserDetails result = instance.retrieveUser("username", authentication);
+        instance.retrieveUser("username", authentication);
     }
 }

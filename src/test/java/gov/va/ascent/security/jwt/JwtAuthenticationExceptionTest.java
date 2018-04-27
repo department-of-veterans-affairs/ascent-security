@@ -18,12 +18,12 @@ public class JwtAuthenticationExceptionTest {
     
     @Test
     public void testSomeMethod() {
-    		JwtAuthenticationException exception = new JwtAuthenticationException("testmessage");
+    		new JwtAuthenticationException("testmessage");
     }
     
     @Test
     public void testSomeMethod1() {
-    		JwtAuthenticationException exception = new JwtAuthenticationException("testmessage", new Throwable());
+    		new JwtAuthenticationException("testmessage", new Throwable());
     }
     
 }

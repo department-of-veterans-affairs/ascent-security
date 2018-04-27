@@ -59,7 +59,7 @@ public class JwtAuthenticationFilterTest {
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
                 new JwtAuthenticationSuccessHandler(),provider);
 
-        Authentication result = filter.attemptAuthentication(request,
+        filter.attemptAuthentication(request,
                 new MockHttpServletResponse());
     }
 
@@ -77,7 +77,7 @@ public class JwtAuthenticationFilterTest {
                 new JwtAuthenticationSuccessHandler(),provider);
 
         try {
-			Authentication result = filter.attemptAuthentication(request,
+			filter.attemptAuthentication(request,
 			        new MockHttpServletResponse());
 		} catch (Exception e) {
 			Assert.assertTrue(e.getMessage().contains("Tampered"));
@@ -98,7 +98,7 @@ public class JwtAuthenticationFilterTest {
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
                 new JwtAuthenticationSuccessHandler(),provider);
         try {
-			Authentication result = filter.attemptAuthentication(request,
+			 filter.attemptAuthentication(request,
 			        new MockHttpServletResponse());
 		} catch (Exception e) {
 			Assert.assertTrue(e.getMessage().contains("Malformed"));
