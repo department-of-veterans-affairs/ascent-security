@@ -18,6 +18,7 @@ public class JwtAuthenticationProperties {
 
     public static final int AUTH_ORDER = SecurityProperties.BASIC_AUTH_ORDER - 2;
     public static final int NO_AUTH_ORDER = AUTH_ORDER + 1;
+    private int expirationInSeconds = 900;
 
     public boolean isEnabled() {
         return enabled;
@@ -66,4 +67,13 @@ public class JwtAuthenticationProperties {
     public void setExcludeUrls(String[] excludeUrls) {
         this.excludeUrls = excludeUrls;
     }
+
+	public int getExpirationInSeconds() {
+		return expirationInSeconds;
+	}
+
+	public void setExpirationInSeconds(int expirationInSeconds) {
+		this.expirationInSeconds = expirationInSeconds;
+	}
+
 }
