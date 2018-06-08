@@ -12,6 +12,7 @@ public class JwtAuthenticationProperties {
     private String header = "Authorization";
     private String secret = "secret";
     private String issuer = "Vets.gov";
+    private int expireInSeconds = 900;
     private String filterProcessUrl = "/**";
     private String[] excludeUrls = {"/v2/api-docs/**", "/configuration/ui/**", "/swagger-resources/**",
             "/configuration/security/**", "/swagger-ui.html", "/webjars/**", "/**/token", "/**/swagger/error-keys.html"};
@@ -66,4 +67,13 @@ public class JwtAuthenticationProperties {
     public void setExcludeUrls(String[] excludeUrls) {
         this.excludeUrls = excludeUrls;
     }
+
+	public int getExpireInSeconds() {
+		return expireInSeconds;
+	}
+
+	public void setExpireInSeconds(int expireInSeconds) {
+		this.expireInSeconds = expireInSeconds;
+	}
+
 }
