@@ -95,6 +95,27 @@ public class JwtAuthenticationPropertiesTest {
      * Test of setSecret method, of class JwtAuthenticationProperties.
      */
     @Test
+    public void testSetExpirationInSeconds() {
+        int expireInSeconds = 900;
+        jwtAuthenticationProperties.setExpireInSeconds(expireInSeconds);
+        assertTrue(expireInSeconds == jwtAuthenticationProperties.getExpireInSeconds());
+    }
+    
+    /**
+     * Test of getIssuer method, of class JwtAuthenticationProperties.
+     */
+    @Test
+    public void testGetExpirationInSeconds() {
+        JwtAuthenticationProperties jwtAuthenticationProperties = new JwtAuthenticationProperties();
+        int expResult = 900;
+        int result = jwtAuthenticationProperties.getExpireInSeconds();
+        assertTrue(expResult == result);
+    }
+
+    /**
+     * Test of setSecret method, of class JwtAuthenticationProperties.
+     */
+    @Test
     public void testSetIssuer() {
         String issuer = "Issuer2.gov";
         jwtAuthenticationProperties.setSecret(issuer);

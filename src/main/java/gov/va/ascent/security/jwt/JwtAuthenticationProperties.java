@@ -12,13 +12,13 @@ public class JwtAuthenticationProperties {
     private String header = "Authorization";
     private String secret = "secret";
     private String issuer = "Vets.gov";
+    private int expireInSeconds = 900;
     private String filterProcessUrl = "/**";
     private String[] excludeUrls = {"/v2/api-docs/**", "/configuration/ui/**", "/swagger-resources/**",
             "/configuration/security/**", "/swagger-ui.html", "/webjars/**", "/**/token", "/**/swagger/error-keys.html"};
 
     public static final int AUTH_ORDER = SecurityProperties.BASIC_AUTH_ORDER - 2;
     public static final int NO_AUTH_ORDER = AUTH_ORDER + 1;
-    private int expirationInSeconds = 900;
 
     public boolean isEnabled() {
         return enabled;
@@ -68,12 +68,12 @@ public class JwtAuthenticationProperties {
         this.excludeUrls = excludeUrls;
     }
 
-	public int getExpirationInSeconds() {
-		return expirationInSeconds;
+	public int getExpireInSeconds() {
+		return expireInSeconds;
 	}
 
-	public void setExpirationInSeconds(int expirationInSeconds) {
-		this.expirationInSeconds = expirationInSeconds;
+	public void setExpireInSeconds(int expireInSeconds) {
+		this.expireInSeconds = expireInSeconds;
 	}
 
 }
