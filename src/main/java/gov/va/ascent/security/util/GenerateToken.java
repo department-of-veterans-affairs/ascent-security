@@ -46,27 +46,29 @@ public class GenerateToken {
 	}
 
 	public static String generateJwt(final PersonTraits person, final int expireInsec, final String secret, final String issuer) {
-		System.out.println("person: " + ReflectionToStringBuilder.toString(person));
-		System.out.println("expireInsec: " + expireInsec);
-		System.out.println("secret: " + secret);
-		System.out.println("issuer: " + issuer);
+		System.out.println("GenerateToken->expireInsec :: person: " + ReflectionToStringBuilder.toString(person));
+		System.out.println("GenerateToken->expireInsec :: expireInsec: " + expireInsec);
+		System.out.println("GenerateToken->expireInsec :: secret: " + secret);
+		System.out.println("GenerateToken->expireInsec :: issuer: " + issuer);
 
 		final Calendar currentTime = GregorianCalendar.getInstance();
 		final Calendar expiration = GregorianCalendar.getInstance();
 		expiration.setTime(currentTime.getTime());
 		expiration.add(Calendar.SECOND, expireInsec);
-		System.out.println("expiration: " + SimpleDateFormat.getTimeInstance(SimpleDateFormat.FULL).format(expiration.getTime()));
+		System.out.println("GenerateToken->expireInsec :: expiration: "
+				+ SimpleDateFormat.getTimeInstance(SimpleDateFormat.FULL).format(expiration.getTime()));
 
 		// The JWT signature algorithm we will be using to sign the token
 		final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-		System.out.println("signatureAlgorithm: " + signatureAlgorithm.getJcaName());
+		System.out.println("GenerateToken->expireInsec :: signatureAlgorithm: " + signatureAlgorithm.getJcaName());
 
-		System.out.println("Getting signingKey with UTF-8 secret and " + signatureAlgorithm.getJcaName() + " algorithm ...");
+		System.out.println("GenerateToken->expireInsec :: Getting signingKey with UTF-8 secret and " + signatureAlgorithm.getJcaName()
+				+ " algorithm ...");
 		// We will sign our JWT with our ApiKey secret
 		final Key signingKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), signatureAlgorithm.getJcaName());
-		System.out.println("signingKey: " + ReflectionToStringBuilder.reflectionToString(signingKey));
+		System.out.println("GenerateToken->expireInsec :: signingKey: " + ReflectionToStringBuilder.reflectionToString(signingKey));
 
-		return Jwts.builder()
+		final String generatedTokenString = Jwts.builder()
 				.setHeaderParam("typ", "JWT")
 				.setIssuer(issuer)
 				.setIssuedAt(currentTime.getTime())
@@ -89,7 +91,11 @@ public class GenerateToken {
 				.claim("icn", person.getIcn())
 				.claim("fileNumber", person.getFileNumber())
 				.claim("correlationIds", person.getCorrelationIds())
-				.signWith(signatureAlgorithm, signingKey).compact();
+				.signWith(signatureAlgorithm, signingKey)
+				.compact();
+
+		System.out.println("GenerateToken->expireInsec :: generatedTokenString: " + generatedTokenString);
+		return generatedTokenString;
 	}
 
 	public static PersonTraits person() {

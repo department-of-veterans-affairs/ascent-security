@@ -55,10 +55,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
 			throws IOException, ServletException {
 
-		System.out.println("---- attemptAuthentication ----");
+		System.out.println("---- JwtAuthenticationFilter->attemptAuthentication ----");
 
 		String token = request.getHeader(jwtAuthenticationProperties.getHeader());
-		System.out.println("attemptAuthentication :: retrieved token from request: " + token);
+		System.out.println("JwtAuthenticationFilter->attemptAuthentication :: retrieved token from request: " + token);
 
 		if (token == null || !token.startsWith("Bearer ")) {
 			LOG.error("No JWT Token in Header");
@@ -66,24 +66,31 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		}
 
 		token = token.substring(7);
-		System.out.println("attemptAuthentication :: truncated token: " + token);
+		System.out.println("JwtAuthenticationFilter->attemptAuthentication :: truncated token: " + token);
 
 		try {
 			final JwtAuthenticationToken jwtToken = new JwtAuthenticationToken(token);
-			System.out.println("attemptAuthentication :: jwtToken: " + ReflectionToStringBuilder.toString(jwtToken));
-			System.out.println("attemptAuthentication :: authenticationManager: "
+			System.out.println("JwtAuthenticationFilter->attemptAuthentication :: authenticationManager: "
 					+ ReflectionToStringBuilder.toString(getAuthenticationManager()));
-			return getAuthenticationManager().authenticate(jwtToken);
+			System.out.println(
+					">>>> JwtAuthenticationFilter->attemptAuthentication :: jwtToken: "
+							+ ReflectionToStringBuilder.reflectionToString(jwtToken));
+			final Authentication auth = getAuthenticationManager().authenticate(jwtToken);
+			System.out.println(">>>> JwtAuthenticationFilter->attemptAuthentication :: auth [[[ authentication OUT ]]]: "
+					+ ReflectionToStringBuilder.reflectionToString(auth));
+			return auth;
 		} catch (final SignatureException signatureException) {
 			System.out
-					.println("attemptAuthentication :: SignatureException: " + ReflectionToStringBuilder.toString(signatureException));
+					.println("JwtAuthenticationFilter->attemptAuthentication :: SignatureException: "
+							+ ReflectionToStringBuilder.toString(signatureException));
 			writeAuditForJwtTokenErrors(
 					new StringBuffer("Tampered Token[").append(token).append("]\nSignatureException[")
 							.append(signatureException.getMessage()).append("]\n").toString(),
 					request);
 			throw new JwtAuthenticationException("Tampered Token");
 		} catch (final MalformedJwtException ex) {
-			System.out.println("attemptAuthentication :: MalformedJwtException: " + ReflectionToStringBuilder.toString(ex));
+			System.out.println("JwtAuthenticationFilter->attemptAuthentication :: MalformedJwtException: "
+					+ ReflectionToStringBuilder.toString(ex));
 			writeAuditForJwtTokenErrors(
 					new StringBuffer("Malformed Token[").append(token).append(" ]\nMalformedJwtException[").append(ex.getMessage())
 							.append("]\n").toString(),

@@ -50,12 +50,13 @@ public class JwtAuthenticationFilterTest {
 
 		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
 				new JwtAuthenticationSuccessHandler(), provider);
-		System.out.print("Filter: " + ReflectionToStringBuilder.toString(filter));
+		System.out.print("JwtAuthenticationFilterTest :: filter: " + ReflectionToStringBuilder.toString(filter));
 
-		System.out.println("Request: " + ReflectionToStringBuilder.toString(request));
+		System.out.println("JwtAuthenticationFilterTest :: request: " + ReflectionToStringBuilder.toString(request));
 
 		final Authentication result = filter.attemptAuthentication(request,
 				new MockHttpServletResponse());
+		System.out.println("JwtAuthenticationFilterTest :: result: " + ReflectionToStringBuilder.toString(result));
 		Assert.assertTrue(result != null);
 		Assert.assertTrue(
 				((PersonTraits) result.getPrincipal()).getFirstName().equalsIgnoreCase(GenerateToken.person().getFirstName()));
