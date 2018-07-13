@@ -41,6 +41,11 @@ public class JwtAuthenticationFilterTest {
 		System.out.println(
 				"------------------------------------- JwtAuthenticationFilterTest.testNormalOperation() -------------------------------------");
 		final MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
+		final String content = "{\n" +
+				"  \"participantID\": 0,\n" +
+				"  \"ssn\": \"string\"\n" +
+				"}";
+		request.setContent(content.getBytes());
 		request.addHeader("Authorization", "Bearer " + GenerateToken.generateJwt());
 
 		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
