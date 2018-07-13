@@ -66,12 +66,14 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		}
 
 		token = token.substring(7);
-		System.out.println("attemptAuthentication :: truncated toke: " + token);
+		System.out.println("attemptAuthentication :: truncated token: " + token);
 
 		try {
+			final JwtAuthenticationToken jwtToken = new JwtAuthenticationToken(token);
+			System.out.println("attemptAuthentication :: jwtToken: " + ReflectionToStringBuilder.toString(jwtToken));
 			System.out.println("attemptAuthentication :: authenticationManager: "
 					+ ReflectionToStringBuilder.toString(getAuthenticationManager()));
-			return getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
+			return getAuthenticationManager().authenticate(jwtToken);
 		} catch (final SignatureException signatureException) {
 			System.out
 					.println("attemptAuthentication :: SignatureException: " + ReflectionToStringBuilder.toString(signatureException));
