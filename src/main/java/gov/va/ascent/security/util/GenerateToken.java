@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -52,6 +53,8 @@ public class GenerateToken {
 		System.out.println("GenerateToken->expireInsec :: issuer: " + issuer);
 
 		final Calendar currentTime = GregorianCalendar.getInstance();
+		currentTime.setTimeZone(TimeZone.getTimeZone("EDT")); // debug
+		currentTime.set(2018, GregorianCalendar.JULY, 16, 17, 52, 32); // debug
 		final Calendar expiration = GregorianCalendar.getInstance();
 		expiration.setTime(currentTime.getTime());
 		expiration.add(Calendar.SECOND, expireInsec);

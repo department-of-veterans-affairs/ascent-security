@@ -48,6 +48,7 @@ public class JwtAuthenticationFilterTest {
 		request.setContent(content.getBytes());
 		request.addHeader("Authorization", "Bearer " + GenerateToken.generateJwt());
 
+		System.out.print("JwtAuthenticationFilterTest :: properties: " + ReflectionToStringBuilder.toString(properties));
 		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
 				new JwtAuthenticationSuccessHandler(), provider);
 		System.out.print("JwtAuthenticationFilterTest :: filter: " + ReflectionToStringBuilder.toString(filter));
