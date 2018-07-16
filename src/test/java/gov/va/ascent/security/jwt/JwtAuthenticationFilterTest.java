@@ -38,6 +38,10 @@ public class JwtAuthenticationFilterTest {
 
 	@Test
 	public void testNormalOperation() throws Exception {
+		/* MAKE SURE THE SECRET IS CORRECT */
+		final String secret = "secret";
+		properties.setSecret(secret);
+
 		System.out.println(
 				"------------------------------------- JwtAuthenticationFilterTest.testNormalOperation() -------------------------------------");
 		final MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");

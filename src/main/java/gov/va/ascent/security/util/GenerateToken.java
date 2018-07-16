@@ -53,13 +53,14 @@ public class GenerateToken {
 		System.out.println("GenerateToken->expireInsec :: issuer: " + issuer);
 
 		final Calendar currentTime = GregorianCalendar.getInstance();
+		currentTime.clear();
 		currentTime.setTimeZone(TimeZone.getTimeZone("EDT")); // debug
 		currentTime.set(2018, GregorianCalendar.JULY, 16, 17, 52, 32); // debug
-		final Calendar expiration = GregorianCalendar.getInstance();
+		final Calendar expiration = (GregorianCalendar) currentTime.clone();
 		expiration.setTime(currentTime.getTime());
 		expiration.add(Calendar.SECOND, expireInsec);
 		System.out.println("GenerateToken->expireInsec :: expiration: "
-				+ SimpleDateFormat.getTimeInstance(SimpleDateFormat.FULL).format(expiration.getTime()));
+				+ SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.FULL, SimpleDateFormat.FULL).format(expiration.getTime()));
 
 		// The JWT signature algorithm we will be using to sign the token
 		final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
