@@ -38,9 +38,12 @@ public class JwtAuthenticationFilterTest {
 
 	@Test
 	public void testNormalOperation() throws Exception {
-		/* MAKE SURE THE SECRET IS CORRECT */
+		/* MAKE SURE PROPERTIES ARE CORRECT */
 		final String secret = "secret";
 		properties.setSecret(secret);
+		properties.setFilterProcessUrl("/**");
+		properties.setExcludeUrls(new String[] { "/v2/api-docs/**", "/configuration/ui/**", "/swagger-resources/**",
+				"/configuration/security/**", "/swagger-ui.html", "/webjars/**", "/**/token", "/**/swagger/error-keys.html" });
 
 		System.out.println(
 				"------------------------------------- JwtAuthenticationFilterTest.testNormalOperation() -------------------------------------");
