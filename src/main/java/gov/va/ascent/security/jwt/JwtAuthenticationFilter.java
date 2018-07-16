@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -35,100 +36,125 @@ import io.jsonwebtoken.SignatureException;
  */
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private JwtAuthenticationProperties jwtAuthenticationProperties;
+	private final JwtAuthenticationProperties jwtAuthenticationProperties;
 
-    private static final Logger LOG = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    public JwtAuthenticationFilter(JwtAuthenticationProperties jwtAuthenticationProperties, AuthenticationSuccessHandler jwtAuthenticationSuccessHandler,
-                                   AuthenticationProvider jwtAuthenticationProvider) {
-        super(new IgnoredRequestMatcher(jwtAuthenticationProperties.getFilterProcessUrl(), jwtAuthenticationProperties.getExcludeUrls()));
-        this.jwtAuthenticationProperties = jwtAuthenticationProperties;
-        setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
-        setAuthenticationManager(new ProviderManager(new ArrayList<>(Arrays.asList(jwtAuthenticationProvider))));
-    }
-
+	public JwtAuthenticationFilter(final JwtAuthenticationProperties jwtAuthenticationProperties,
+			final AuthenticationSuccessHandler jwtAuthenticationSuccessHandler,
+			final AuthenticationProvider jwtAuthenticationProvider) {
+		super(new IgnoredRequestMatcher(jwtAuthenticationProperties.getFilterProcessUrl(),
+				jwtAuthenticationProperties.getExcludeUrls()));
+		this.jwtAuthenticationProperties = jwtAuthenticationProperties;
+		setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
+		setAuthenticationManager(new ProviderManager(new ArrayList<>(Arrays.asList(jwtAuthenticationProvider))));
+	}
 
 	@Override
 	@SuppressWarnings("squid:S1166")
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+	public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
 			throws IOException, ServletException {
+
+		System.out.println("---- JwtAuthenticationFilter->attemptAuthentication ----");
+
 		String token = request.getHeader(jwtAuthenticationProperties.getHeader());
+		System.out.println("JwtAuthenticationFilter->attemptAuthentication :: retrieved token from request: " + token);
+
 		if (token == null || !token.startsWith("Bearer ")) {
 			LOG.error("No JWT Token in Header");
 			throw new JwtAuthenticationException("No JWT Token in Header");
 		}
 
 		token = token.substring(7);
+		System.out.println("JwtAuthenticationFilter->attemptAuthentication :: truncated token: " + token);
 
 		try {
-			return getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
-		}  catch (SignatureException signatureException) {
+			final JwtAuthenticationToken jwtToken = new JwtAuthenticationToken(token);
+			System.out.println("JwtAuthenticationFilter->attemptAuthentication :: authenticationManager: "
+					+ ReflectionToStringBuilder.toString(getAuthenticationManager()));
+			System.out.println(
+					">>>> JwtAuthenticationFilter->attemptAuthentication :: jwtToken: "
+							+ ReflectionToStringBuilder.reflectionToString(jwtToken));
+			final Authentication auth = getAuthenticationManager().authenticate(jwtToken);
+			System.out.println(">>>> JwtAuthenticationFilter->attemptAuthentication :: auth [[[ authentication OUT ]]]: "
+					+ ReflectionToStringBuilder.reflectionToString(auth));
+			return auth;
+		} catch (final SignatureException signatureException) {
+			System.out
+					.println("JwtAuthenticationFilter->attemptAuthentication :: SignatureException: "
+							+ ReflectionToStringBuilder.toString(signatureException));
 			writeAuditForJwtTokenErrors(
-					new StringBuffer("Tampered Token[").append(token).append("]\nSignatureException[").
-							append(signatureException.getMessage()).append("]\n").toString(), request);
+					new StringBuffer("Tampered Token[").append(token).append("]\nSignatureException[")
+							.append(signatureException.getMessage()).append("]\n").toString(),
+					request);
 			throw new JwtAuthenticationException("Tampered Token");
-		} catch (MalformedJwtException ex) {
+		} catch (final MalformedJwtException ex) {
+			System.out.println("JwtAuthenticationFilter->attemptAuthentication :: MalformedJwtException: "
+					+ ReflectionToStringBuilder.toString(ex));
 			writeAuditForJwtTokenErrors(
-					new StringBuffer("Malformed Token[").append(token).append(" ]\nMalformedJwtException[").
-					append(ex.getMessage()).append("]\n").toString(), request);
+					new StringBuffer("Malformed Token[").append(token).append(" ]\nMalformedJwtException[").append(ex.getMessage())
+							.append("]\n").toString(),
+					request);
 			throw new JwtAuthenticationException("Malformed Token");
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 * @param cause - cause
 	 * @param request - original request
 	 */
-	private void writeAuditForJwtTokenErrors(String cause, HttpServletRequest request) {
+	private void writeAuditForJwtTokenErrors(final String cause, final HttpServletRequest request) {
 		String message = "";
 		try {
 			message = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			LOG.error("Error while reading the request {}", e);
 		}
 
-		String data = cause.concat(" Request: ").concat(message);
-		AuditEventData auditData = new AuditEventData(AuditEvents.SECURITY, "attemptAuthentication", JwtAuthenticationFilter.class.getName());
+		final String data = cause.concat(" Request: ").concat(message);
+		final AuditEventData auditData =
+				new AuditEventData(AuditEvents.SECURITY, "attemptAuthentication", JwtAuthenticationFilter.class.getName());
 		AuditLogger.error(auditData, data);
 	}
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
+	@Override
+	protected void successfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
+			final FilterChain chain, final Authentication authResult) throws IOException, ServletException {
+		super.successfulAuthentication(request, response, chain, authResult);
 
-        chain.doFilter(request, response);
-    }
+		chain.doFilter(request, response);
+	}
 }
 
- class IgnoredRequestMatcher implements RequestMatcher {
-    private RequestMatcher baselineMatches;
-    private RequestMatcher ignoreMatches;
+class IgnoredRequestMatcher implements RequestMatcher {
+	private final RequestMatcher baselineMatches;
+	private final RequestMatcher ignoreMatches;
 
-    public IgnoredRequestMatcher(String baselineMatches, String[] ignoreUrls) {
-        this.baselineMatches = new AntPathRequestMatcher(baselineMatches);
-        this.ignoreMatches = ignoreMatchers(ignoreUrls);
-    }
+	public IgnoredRequestMatcher(final String baselineMatches, final String[] ignoreUrls) {
+		this.baselineMatches = new AntPathRequestMatcher(baselineMatches);
+		this.ignoreMatches = ignoreMatchers(ignoreUrls);
+	}
 
-    public IgnoredRequestMatcher(RequestMatcher baselineMatches, RequestMatcher ignoreMatches) {
-        this.baselineMatches = baselineMatches;
-        this.ignoreMatches = ignoreMatches;
-    }
+	public IgnoredRequestMatcher(final RequestMatcher baselineMatches, final RequestMatcher ignoreMatches) {
+		this.baselineMatches = baselineMatches;
+		this.ignoreMatches = ignoreMatches;
+	}
 
-    private RequestMatcher ignoreMatchers(String[] exclusionUrls){
-        LinkedList<RequestMatcher> matcherList = new LinkedList<>();
-        for (String url : exclusionUrls) {
-            matcherList.add(new AntPathRequestMatcher(url));
-        }
-        return new OrRequestMatcher(matcherList);
-    }
+	private RequestMatcher ignoreMatchers(final String[] exclusionUrls) {
+		final LinkedList<RequestMatcher> matcherList = new LinkedList<>();
+		for (final String url : exclusionUrls) {
+			matcherList.add(new AntPathRequestMatcher(url));
+		}
+		return new OrRequestMatcher(matcherList);
+	}
 
-    @Override
-    public boolean matches(HttpServletRequest request) {
-        if (ignoreMatches.matches(request)) {
-            return false;
-        } else {
-            return baselineMatches.matches(request);
-        }
-    }
+	@Override
+	public boolean matches(final HttpServletRequest request) {
+		if (ignoreMatches.matches(request)) {
+			return false;
+		} else {
+			return baselineMatches.matches(request);
+		}
+	}
 }

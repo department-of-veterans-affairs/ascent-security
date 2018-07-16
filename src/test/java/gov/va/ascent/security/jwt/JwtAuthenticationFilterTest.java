@@ -5,10 +5,10 @@
  */
 package gov.va.ascent.security.jwt;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -30,78 +30,93 @@ import gov.va.ascent.security.util.GenerateToken;
 @ContextConfiguration(classes = AscentSecurityTestConfig.class)
 public class JwtAuthenticationFilterTest {
 
-    @Autowired
-    JwtAuthenticationProperties properties;
+	@Autowired
+	JwtAuthenticationProperties properties;
 
-    @Autowired
-    AuthenticationProvider provider;
+	@Autowired
+	AuthenticationProvider provider;
 
-    @Test
-    public void testNormalOperation() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
-        request.addHeader("Authorization", "Bearer "+ GenerateToken.generateJwt());
+	@Test
+	public void testNormalOperation() throws Exception {
+		/* MAKE SURE THE SECRET IS CORRECT */
+		final String secret = "secret";
+		properties.setSecret(secret);
 
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
-                new JwtAuthenticationSuccessHandler(),provider);
+		System.out.println(
+				"------------------------------------- JwtAuthenticationFilterTest.testNormalOperation() -------------------------------------");
+		final MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
+		final String content = "{\n" +
+				"  \"participantID\": 6666345,\n" +
+				"  \"ssn\": \"912444689\"\n" +
+				"}";
+		request.setContent(content.getBytes());
+		request.addHeader("Authorization", "Bearer " + GenerateToken.generateJwt());
 
-        Authentication result = filter.attemptAuthentication(request,
-                new MockHttpServletResponse());
-        Assert.assertTrue(result != null);
-        Assert.assertTrue((((PersonTraits) result.getPrincipal())).getFirstName().equalsIgnoreCase(GenerateToken.person().getFirstName()));
-    }
-    
-    
-    @Test(expected = JwtAuthenticationException.class) 
-    public void testExceptionOperation() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
-        request.addHeader("Authorization", "Bearers "+ GenerateToken.generateJwt());
+		System.out.print("JwtAuthenticationFilterTest :: properties: " + ReflectionToStringBuilder.toString(properties));
+		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
+				new JwtAuthenticationSuccessHandler(), provider);
+		System.out.print("JwtAuthenticationFilterTest :: filter: " + ReflectionToStringBuilder.toString(filter));
 
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
-                new JwtAuthenticationSuccessHandler(),provider);
+		System.out.println("JwtAuthenticationFilterTest :: request: " + ReflectionToStringBuilder.toString(request));
 
-        filter.attemptAuthentication(request,
-                new MockHttpServletResponse());
-    }
+		final Authentication result = filter.attemptAuthentication(request,
+				new MockHttpServletResponse());
+		System.out.println("JwtAuthenticationFilterTest :: result: " + ReflectionToStringBuilder.toString(result));
+		Assert.assertTrue(result != null);
+		Assert.assertTrue(
+				((PersonTraits) result.getPrincipal()).getFirstName().equalsIgnoreCase(GenerateToken.person().getFirstName()));
+	}
 
-    @Test
-    public void testTamperedException() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
-        String content = "{\n" + 
-        		"  \"participantID\": 0,\n" + 
-        		"  \"ssn\": \"string\"\n" + 
-        		"}";
-        request.setContent(content.getBytes());
-        request.addHeader("Authorization", "Bearer "+ GenerateToken.generateJwt() + "s");
+	@Test(expected = JwtAuthenticationException.class)
+	public void testExceptionOperation() throws Exception {
+		final MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
+		request.addHeader("Authorization", "Bearers " + GenerateToken.generateJwt());
 
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
-                new JwtAuthenticationSuccessHandler(),provider);
+		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
+				new JwtAuthenticationSuccessHandler(), provider);
 
-        try {
+		filter.attemptAuthentication(request,
+				new MockHttpServletResponse());
+	}
+
+	@Test
+	public void testTamperedException() throws Exception {
+		final MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
+		final String content = "{\n" +
+				"  \"participantID\": 0,\n" +
+				"  \"ssn\": \"string\"\n" +
+				"}";
+		request.setContent(content.getBytes());
+		request.addHeader("Authorization", "Bearer " + GenerateToken.generateJwt() + "s");
+
+		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
+				new JwtAuthenticationSuccessHandler(), provider);
+
+		try {
 			filter.attemptAuthentication(request,
-			        new MockHttpServletResponse());
-		} catch (Exception e) {
+					new MockHttpServletResponse());
+		} catch (final Exception e) {
 			Assert.assertTrue(e.getMessage().contains("Tampered"));
 		}
-    }
-    
-    
-    @Test
-    public void testMalformedException() throws Exception {
-    	 MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
-         String content = "{\n" + 
-         		"  \"participantID\": 0,\n" + 
-         		"  \"ssn\": \"string\"\n" + 
-         		"}";
-        request.setContent(content.getBytes());
-        request.addHeader("Authorization", "Bearer malformedToken");
+	}
 
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
-                new JwtAuthenticationSuccessHandler(),provider);
-        try {
-			 filter.attemptAuthentication(request,
-			        new MockHttpServletResponse());
-		} catch (Exception e) {
+	@Test
+	public void testMalformedException() throws Exception {
+		final MockHttpServletRequest request = new MockHttpServletRequest("POST", "/user");
+		final String content = "{\n" +
+				"  \"participantID\": 0,\n" +
+				"  \"ssn\": \"string\"\n" +
+				"}";
+		request.setContent(content.getBytes());
+		request.addHeader("Authorization", "Bearer malformedToken");
+
+		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(properties,
+				new JwtAuthenticationSuccessHandler(), provider);
+		try {
+			filter.attemptAuthentication(request,
+					new MockHttpServletResponse());
+		} catch (final Exception e) {
 			Assert.assertTrue(e.getMessage().contains("Malformed"));
 		}
-    }
+	}
 }
