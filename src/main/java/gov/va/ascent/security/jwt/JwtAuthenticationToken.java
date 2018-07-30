@@ -25,12 +25,12 @@ public class JwtAuthenticationToken extends UsernamePasswordAuthenticationToken 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int prime = 31; // NOSONAR don't use all-caps on local var
 		int result = super.hashCode();
 		result = prime * result + (token == null ? 0 : token.hashCode());
 		return result;
@@ -38,7 +38,7 @@ public class JwtAuthenticationToken extends UsernamePasswordAuthenticationToken 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
