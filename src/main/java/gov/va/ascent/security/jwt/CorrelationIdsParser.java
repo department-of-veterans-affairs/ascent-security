@@ -95,31 +95,32 @@ public class CorrelationIdsParser {
 	 * The Constant ISSUER_INDEX.
 	 */
 	private static final int STATUS_INDEX = 4;
-	
+
 	private final HashMap<String, String> hmap = new HashMap<>();
 
-    private static final Logger LOG = LoggerFactory.getLogger(CorrelationIdsParser.class);
-	
-    /**
-     * 
-     * @param list
-     * @return
-     */
-	public Map<String, String> parseCorrelationIds(List<String> list) {
+	private static final Logger LOG = LoggerFactory.getLogger(CorrelationIdsParser.class);
+
+	/**
+	 *
+	 * @param list
+	 * @return
+	 */
+	public Map<String, String> parseCorrelationIds(final List<String> list) {
 		if (list != null) {
-			for (String token : list) {
+			for (final String token : list) {
 				processToken(token);
 			}
 		}
 
 		return hmap;
 	}
-	
+
 	/**
 	 * process the token and populate the map with values.
+	 *
 	 * @param tokenId
 	 */
-	private void processToken(String tokenId) {
+	private void processToken(final String tokenId) {
 		final String[] tokens = tokenId.split("\\^");
 		if (tokens.length >= MAX_FIELD_COUNT) {
 			final String elementId = tokens[ELEMENT_ID_INDEX];
@@ -129,12 +130,12 @@ public class CorrelationIdsParser {
 			final UserStatus status = UserStatus.fromValue(tokens[STATUS_INDEX]);
 
 			if (status == null) {
-				StringBuilder sb = new StringBuilder();
+				final StringBuilder sb = new StringBuilder();
 				sb.append("Id: ").append(elementId).append(", Id Type: ").append(type).append(", Assigning Facility: ")
 						.append(assigningFacility).append(", Assigning Authority: ").append(assigningAuthority)
 						.append(", Id Status: ").append(tokens[STATUS_INDEX]);
 
-				LOG.warn("The status of the id is invalid - {}", sb.toString());
+				LOG.warn("The status of the id is invalid - {}", sb);
 				return;
 			}
 
@@ -149,13 +150,14 @@ public class CorrelationIdsParser {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param elementId
 	 * @param type
 	 * @param assigningAuthority
 	 * @param assigningFacility
 	 */
-	private void determinePidAndFileNumber(String elementId, String type, String assigningAuthority, String assigningFacility) {
+	private void determinePidAndFileNumber(final String elementId, final String type, final String assigningAuthority,
+			final String assigningFacility) {
 		if (type.equals(PATIENT_IDENTIFIER) && assigningAuthority.equals(USVBA)) {
 			if (assigningFacility.equals(CORP_ASSIGNING_FACILITY)) {
 				hmap.put("pid", elementId);
@@ -164,15 +166,16 @@ public class CorrelationIdsParser {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param elementId
 	 * @param type
 	 * @param assigningAuthority
 	 * @param assigningFacility
 	 */
-	private void determineEdipiAndIcn(String elementId, String type, String assigningAuthority, String assigningFacility) {
+	private void determineEdipiAndIcn(final String elementId, final String type, final String assigningAuthority,
+			final String assigningFacility) {
 		if (type.equals(NATIONAL_IDENTIFIER)) {
 			if (assigningFacility.equals(USDOD_ASSIGNING_FACILITY) && assigningAuthority.equals(USDOD)) {
 				hmap.put("dodedipnid", elementId);
@@ -182,17 +185,17 @@ public class CorrelationIdsParser {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param elementId
 	 * @param type
 	 * @param assigningAuthority
 	 */
-	private void determinePnIDAndPnIdType(String elementId, String type, String assigningAuthority) {
+	private void determinePnIDAndPnIdType(final String elementId, final String type, final String assigningAuthority) {
 		if (type.equals(SS) && assigningAuthority.equals(USVBA)) {
 			hmap.put("pnid", elementId);
 			hmap.put("pnidType", type);
 		}
-	}	
+	}
 }

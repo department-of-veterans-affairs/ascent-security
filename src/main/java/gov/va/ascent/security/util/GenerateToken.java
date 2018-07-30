@@ -22,6 +22,13 @@ public class GenerateToken {
 	private static String secret = "secret";
 	private static String issuer = "Vets.gov";
 
+	/**
+	 * Do not instantiate
+	 */
+	private GenerateToken() {
+		throw new UnsupportedOperationException("This is a static class. Do not instantiate it.");
+	}
+
 	public static String generateJwt() {
 		return generateJwt(person(), 900, secret, issuer);
 	}

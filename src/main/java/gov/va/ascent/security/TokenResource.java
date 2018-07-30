@@ -19,21 +19,21 @@ public class TokenResource {
 	private JwtAuthenticationProperties jwtAuthenticationProperties;
 
 	@RequestMapping(value = "/token", method = RequestMethod.POST, consumes = { "application/json" })
-	public String getToken(@RequestBody PersonTraits person) {
+	public String getToken(@RequestBody final PersonTraits person) {
 		return GenerateToken.generateJwt(person, jwtAuthenticationProperties.getExpireInSeconds(),
 				jwtAuthenticationProperties.getSecret(), jwtAuthenticationProperties.getIssuer());
 	}
 
 	/**
 	 * Registers fields that should be allowed for data binding.
-	 * 
+	 *
 	 * @param binder
 	 *            Spring-provided data binding context object.
 	 */
 	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		binder.setAllowedFields(new String[] { "birthDate", "firstName", "lastName", "middleName", "prefix", "suffix",
+	public void initBinder(final WebDataBinder binder) {
+		binder.setAllowedFields("birthDate", "firstName", "lastName", "middleName", "prefix", "suffix",
 				"gender", "assuranceLevel", "email", "dodedipnid", "pnidType", "pnid", "pid", "icn", "fileNumber",
-				"tokenId", "correlationIds" });
+				"tokenId", "correlationIds");
 	}
 }

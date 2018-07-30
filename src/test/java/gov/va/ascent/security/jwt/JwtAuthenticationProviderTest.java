@@ -5,11 +5,16 @@
  */
 package gov.va.ascent.security.jwt;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,42 +32,66 @@ import io.jsonwebtoken.MalformedJwtException;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = AscentSecurityTestConfig.class)
 public class JwtAuthenticationProviderTest {
-    @Autowired
-    JwtAuthenticationProperties jwtAuthenticationProperties;
-    
+	@Autowired
+	JwtAuthenticationProperties jwtAuthenticationProperties;
+
 	@Autowired
 	TokenResource tokenResource;
-	
-    public JwtAuthenticationProviderTest() {
-    }
 
-    /**
-     * Test of retrieveUser method, of class JwtAuthenticationProvider.
-     */
-    @Test
-    public void testRetrieveUser() {
-        String username = "jdoe";
-		PersonTraits person = new PersonTraits();
+	public JwtAuthenticationProviderTest() {
+	}
+
+	/**
+	 * Test of retrieveUser method, of class JwtAuthenticationProvider.
+	 */
+	@Test
+	public void testRetrieveUser() {
+		final String username = "jdoe";
+		final PersonTraits person = new PersonTraits();
 		person.setFirstName("john");
 		person.setLastName("doe");
-		String token = tokenResource.getToken(person);
-		
-        JwtAuthenticationToken authentication = new JwtAuthenticationToken(token);
-        JwtParser parser = new JwtParser(jwtAuthenticationProperties);
-        JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);
-        UserDetails result = instance.retrieveUser(username, authentication);
-        assertNotNull(result);
-    }
-    
-    /**
-     * Test of retrieveUser method, of class JwtAuthenticationProvider.
-     */
-    @Test(expected = MalformedJwtException.class) 
-    public void testRetrieveUserWithException() {
-		
-        JwtAuthenticationToken authentication = new JwtAuthenticationToken("test");
-        JwtParser parser = new JwtParser(jwtAuthenticationProperties);
-        JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);    
-        instance.retrieveUser("username", authentication);
-    }
+		final String token = tokenResource.getToken(person);
+
+		final JwtAuthenticationToken authentication = new JwtAuthenticationToken(token);
+		final JwtParser parser = new JwtParser(jwtAuthenticationProperties);
+		final JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);
+		final UserDetails result = instance.retrieveUser(username, authentication);
+		assertNotNull(result);
+	}
+
+	@Test
+	public void testRetrieveUser_NoPerson() {
+		final String username = "jdoe";
+		final PersonTraits person = new PersonTraits();
+		person.setFirstName("john");
+		person.setLastName("doe");
+		final String token = tokenResource.getToken(person);
+
+		final JwtAuthenticationToken authentication = new JwtAuthenticationToken(token);
+		final JwtParser parser = spy(new JwtParser(jwtAuthenticationProperties));
+		final JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);
+		doReturn(null).when(parser).parseJwt(any());
+
+		UserDetails result = null;
+		try {
+			result = instance.retrieveUser(username, authentication);
+			fail("Should have thrown JwtAuthenticationException.");
+		} catch (final Exception e) {
+			assertTrue(JwtAuthenticationException.class.isAssignableFrom(e.getClass()));
+			assertTrue("Invalid Token".equals(e.getMessage()));
+		}
+		assertNull(result);
+	}
+
+	/**
+	 * Test of retrieveUser method, of class JwtAuthenticationProvider.
+	 */
+	@Test(expected = MalformedJwtException.class)
+	public void testRetrieveUserWithException() {
+
+		final JwtAuthenticationToken authentication = new JwtAuthenticationToken("test");
+		final JwtParser parser = new JwtParser(jwtAuthenticationProperties);
+		final JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);
+		instance.retrieveUser("username", authentication);
+	}
 }
