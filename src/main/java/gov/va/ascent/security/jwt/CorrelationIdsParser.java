@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import gov.va.ascent.framework.log.AscentLogger;
+import gov.va.ascent.framework.log.AscentLoggerFactory;
 
 /**
  *
@@ -98,7 +98,7 @@ public class CorrelationIdsParser {
 
 	private final HashMap<String, String> hmap = new HashMap<>();
 
-	private static final Logger LOG = LoggerFactory.getLogger(CorrelationIdsParser.class);
+	private static final AscentLogger LOG = AscentLoggerFactory.getLogger(CorrelationIdsParser.class);
 
 	/**
 	 *
