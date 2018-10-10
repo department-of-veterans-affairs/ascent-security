@@ -1,9 +1,8 @@
 package gov.va.ascent.security.jwt;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Vaules for user status codes.
+ */
 public enum UserStatus {
 
 	/** The permanent. */
@@ -16,33 +15,20 @@ public enum UserStatus {
 	/** The string value. */
 	private final String status;
 
-	/** The Constant lookup. */
-	private static final Map<String, UserStatus> LOOKUP = new HashMap<>();
-	
 	/**
 	 * Instantiates a new status.
-	 * 
+	 *
 	 * @param stringValue
 	 *            the string value
 	 */
 
-	UserStatus(final String status) {
+	private UserStatus(final String status) {
 		this.status = status;
-	}
-
-
-	/**
-	 * In order to do a lookup of an enum based on it's string value.
-	 */
-	static {
-		for (final UserStatus s : EnumSet.allOf(UserStatus.class)) {
-			LOOKUP.put(s.value(), s);
-		}
 	}
 
 	/**
 	 * Value.
-	 * 
+	 *
 	 * @return the actual status code.
 	 */
 	public String value() {
@@ -51,13 +37,18 @@ public enum UserStatus {
 
 	/**
 	 * From value.
-	 * 
+	 *
 	 * @param stringValue
 	 *            the string value
 	 * @return the enumeration
 	 */
 	public static UserStatus fromValue(final String stringValue) {
-		return LOOKUP.get(stringValue);
+		for (UserStatus s : UserStatus.values()) {
+			if (s.value().equals(stringValue)) {
+				return s;
+			}
+		}
+		throw new IllegalArgumentException("No enum constant for value \"" + stringValue + "\".");
 	}
 
 }
