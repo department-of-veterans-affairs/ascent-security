@@ -3,8 +3,6 @@ package gov.va.ascent.security.jwt;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.List;
-import java.util.Map;
-
 import javax.crypto.spec.SecretKeySpec;
 
 import gov.va.ascent.framework.security.PersonTraits;
@@ -40,6 +38,7 @@ public class JwtParser {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private PersonTraits getPersonFrom(final Claims claims) {
 		PersonTraits personTraits = new PersonTraits();
 		personTraits.setTokenId(claims.getId());
@@ -58,13 +57,7 @@ public class JwtParser {
 		personTraits.setPid(claims.get("pid", String.class));
 		personTraits.setIcn(claims.get("icn", String.class));
 		personTraits.setFileNumber(claims.get("fileNumber", String.class));
-
-		CorrelationIdsParser instance = new CorrelationIdsParser();
-		@SuppressWarnings("unchecked")
-		List<String> list = (List<String>) claims.get("correlationIds");
-		instance.parseCorrelationIds(list);
-
-		personTraits.setCorrelationIds(list);
+		personTraits.setCorrelationIds((List<String>) claims.get("correlationIds"));
 
 		return personTraits;
 	}
