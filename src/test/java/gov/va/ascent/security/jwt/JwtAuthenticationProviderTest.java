@@ -13,6 +13,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,9 @@ public class JwtAuthenticationProviderTest {
 		final PersonTraits person = new PersonTraits();
 		person.setFirstName("john");
 		person.setLastName("doe");
+		person.setCorrelationIds(Arrays.asList(new String[] { "1012832469V956223^NI^200M^USVHA^P",
+				"796046489^PI^200BRLS^USVBA^A", "600071516^PI^200CORP^USVBA^A", "1040626995^NI^200DOD^USDOD^A",
+				"796046489^SS" }));
 		final String token = tokenResource.getToken(person);
 
 		final JwtAuthenticationToken authentication = new JwtAuthenticationToken(token);

@@ -30,8 +30,8 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 
 /**
- * Created by vgadda on 5/4/17.
- * similar to {@code UsernamePasswordAuthenticationFilter}
+ * Configure springboot starter for the Ascent platform.
+ * Similar to {@code UsernamePasswordAuthenticationFilter}
  */
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -39,6 +39,13 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 	private static final AscentLogger LOG = AscentLoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
+	/**
+	 * Create the filter.
+	 * 
+	 * @param jwtAuthenticationProperties
+	 * @param jwtAuthenticationSuccessHandler
+	 * @param jwtAuthenticationProvider
+	 */
 	public JwtAuthenticationFilter(JwtAuthenticationProperties jwtAuthenticationProperties,
 			AuthenticationSuccessHandler jwtAuthenticationSuccessHandler,
 			AuthenticationProvider jwtAuthenticationProvider) {
@@ -79,7 +86,8 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	}
 
 	/**
-	 *
+	 * Audit any errors.
+	 * 
 	 * @param cause - cause
 	 * @param request - original request
 	 */
@@ -106,20 +114,41 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	}
 }
 
+/**
+ * Set rules for what requests should be ignored.
+ */
 class IgnoredRequestMatcher implements RequestMatcher {
 	private RequestMatcher baselineMatches;
 	private RequestMatcher ignoreMatches;
 
+	/**
+	 * Requests to ignore based on ant path configurations.
+	 * 
+	 * @param baselineMatches
+	 * @param ignoreUrls
+	 */
 	public IgnoredRequestMatcher(String baselineMatches, String[] ignoreUrls) {
 		this.baselineMatches = new AntPathRequestMatcher(baselineMatches);
 		this.ignoreMatches = ignoreMatchers(ignoreUrls);
 	}
 
+	/**
+	 * Requests to ignore based on ant path configurations.
+	 * 
+	 * @param baselineMatches
+	 * @param ignoreMatches
+	 */
 	public IgnoredRequestMatcher(RequestMatcher baselineMatches, RequestMatcher ignoreMatches) {
 		this.baselineMatches = baselineMatches;
 		this.ignoreMatches = ignoreMatches;
 	}
 
+	/**
+	 * Add exclusion URLs to the list.
+	 * 
+	 * @param exclusionUrls
+	 * @return RequestMatcher
+	 */
 	private RequestMatcher ignoreMatchers(String[] exclusionUrls) {
 		LinkedList<RequestMatcher> matcherList = new LinkedList<>();
 		for (String url : exclusionUrls) {

@@ -7,13 +7,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import gov.va.ascent.framework.security.PersonTraits;
 
 /**
- * Created by vgadda on 5/4/17.
+ * Provider for decrypting and parsing the JWT.
  */
-
 public class JwtAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
+	/** parses the token into a set of security "claims" contained in the token */
 	JwtParser parser;
 
+	/**
+	 * Create the provider.
+	 * 
+	 * @param parser - the JWT parser
+	 */
 	public JwtAuthenticationProvider(final JwtParser parser) {
 		this.parser = parser;
 	}

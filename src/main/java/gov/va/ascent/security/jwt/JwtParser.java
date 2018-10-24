@@ -3,25 +3,44 @@ package gov.va.ascent.security.jwt;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.List;
+
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
+import gov.va.ascent.framework.log.AscentLogger;
+import gov.va.ascent.framework.log.AscentLoggerFactory;
 import gov.va.ascent.framework.security.PersonTraits;
+import gov.va.ascent.security.jwt.correlation.CorrelationIdsParser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
- * Created by vgadda on 5/4/17.
+ * Parse the encrypted JWT
  */
-
 public class JwtParser {
+	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(JwtParser.class);
 
+	/** The spring configurable properties used for authentication */
 	private JwtAuthenticationProperties jwtAuthenticationProperties;
 
+	/**
+	 * Parse the JWT json into its component values
+	 *
+	 * @param properties
+	 */
 	public JwtParser(final JwtAuthenticationProperties properties) {
 		this.jwtAuthenticationProperties = properties;
 	}
 
+	/**
+	 * Decrypts the JWT and attempts to construct a PersonTraits object from it.
+	 * If correlation id parsing fails, {@code null} is returned.
+	 *
+	 * @param token the encrypted JWT
+	 * @return PersonTraits, or {@code null} if some issue with the correlation ids
+	 */
 	public PersonTraits parseJwt(final String token) {
 		Claims claims = null;
 
@@ -34,14 +53,25 @@ public class JwtParser {
 
 		claims = Jwts.parser().setSigningKey(signingKey).requireIssuer(jwtAuthenticationProperties.getIssuer()).parseClaimsJws(token)
 				.getBody();
+
+		// TODO remove this log statement
+		LOGGER.info("REMOVE THIS LOG STATEMENT.  JWT claims {} " + ReflectionToStringBuilder.toString(claims));
+
 		return getPersonFrom(claims);
 
 	}
 
+	/**
+	 * Attempts to produce a PersonTraits object from the correlation ids.
+	 * If correlation id parsing fails, {@code null} is returned.
+	 *
+	 * @param claims - the JWT contents
+	 * @return PersonTraits, or {@code null} if some issue with the correlation ids
+	 */
 	@SuppressWarnings("unchecked")
 	private PersonTraits getPersonFrom(final Claims claims) {
 		PersonTraits personTraits = new PersonTraits();
-		personTraits.setTokenId(claims.getId());
+
 		personTraits.setFirstName(claims.get("firstName", String.class));
 		personTraits.setLastName(claims.get("lastName", String.class));
 		personTraits.setPrefix(claims.get("prefix", String.class));
@@ -51,13 +81,17 @@ public class JwtParser {
 		personTraits.setGender(claims.get("gender", String.class));
 		personTraits.setAssuranceLevel(claims.get("assuranceLevel", Integer.class));
 		personTraits.setEmail(claims.get("email", String.class));
-		personTraits.setDodedipnid(claims.get("dodedipnid", String.class));
-		personTraits.setPnidType(claims.get("pnidType", String.class));
-		personTraits.setPnid(claims.get("pnid", String.class));
-		personTraits.setPid(claims.get("pid", String.class));
-		personTraits.setIcn(claims.get("icn", String.class));
-		personTraits.setFileNumber(claims.get("fileNumber", String.class));
-		personTraits.setCorrelationIds((List<String>) claims.get("correlationIds"));
+
+		try {
+			CorrelationIdsParser instance = new CorrelationIdsParser();
+			@SuppressWarnings("unchecked")
+			List<String> list = (List<String>) claims.get("correlationIds");
+			instance.parseCorrelationIds(list, personTraits);
+
+		} catch (Exception e) { // NOSONAR intentionally wide, errors are already logged
+			// if there is any detected issue with the correlation ids
+			personTraits = null;
+		}
 
 		return personTraits;
 	}

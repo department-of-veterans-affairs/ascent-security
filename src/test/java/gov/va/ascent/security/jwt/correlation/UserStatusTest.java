@@ -1,9 +1,12 @@
-package gov.va.ascent.security.jwt;
+package gov.va.ascent.security.jwt.correlation;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
+
+import gov.va.ascent.framework.exception.AscentRuntimeException;
 
 public class UserStatusTest {
 
@@ -26,6 +29,14 @@ public class UserStatusTest {
 		assertTrue(UserStatus.fromValue("A").equals(UserStatus.ACTIVE));
 		assertTrue(UserStatus.fromValue("P").equals(UserStatus.PERMANENT));
 		assertTrue(UserStatus.fromValue("T").equals(UserStatus.TEMPORARY));
+
+		try {
+			UserStatus.fromValue("X");
+			fail("Should have thrown AscentRuntimeException");
+		} catch (Exception e) {
+			assertTrue(AscentRuntimeException.class.isAssignableFrom(e.getClass()));
+			assertTrue(e.getMessage().startsWith("UserStatus {} does not exist:"));
+		}
 	}
 
 }
