@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.jwt.JwtAuthenticationProperties;
+import gov.va.ascent.security.model.Person;
 import gov.va.ascent.security.util.GenerateToken;
 
 @RestController
@@ -19,7 +19,7 @@ public class TokenResource {
 	private JwtAuthenticationProperties jwtAuthenticationProperties;
 
 	@RequestMapping(value = "/token", method = RequestMethod.POST, consumes = { "application/json" })
-	public String getToken(@RequestBody final PersonTraits person) {
+	public String getToken(@RequestBody final Person person) {
 		return GenerateToken.generateJwt(person, jwtAuthenticationProperties.getExpireInSeconds(),
 				jwtAuthenticationProperties.getSecret(), jwtAuthenticationProperties.getIssuer());
 	}

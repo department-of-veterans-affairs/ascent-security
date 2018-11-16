@@ -11,6 +11,8 @@ import java.util.UUID;
 import javax.crypto.spec.SecretKeySpec;
 
 import gov.va.ascent.framework.security.PersonTraits;
+import gov.va.ascent.security.model.Person;
+import gov.va.ascent.security.transform.impl.PersonToPersonTraitsTranformer;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -21,6 +23,8 @@ public class GenerateToken {
 
 	private static String secret = "secret";
 	private static String issuer = "Vets.gov";
+
+	private static PersonToPersonTraitsTranformer personToPersonTraitsTranformer = new PersonToPersonTraitsTranformer();
 
 	/**
 	 * Do not instantiate
@@ -33,11 +37,11 @@ public class GenerateToken {
 		return generateJwt(person(), 900, secret, issuer);
 	}
 
-	public static String generateJwt(final PersonTraits person, final String secret, final String issuer) {
+	public static String generateJwt(final Person person, final String secret, final String issuer) {
 		return generateJwt(person, 900, secret, issuer);
 	}
 
-	public static String generateJwt(final PersonTraits person) {
+	public static String generateJwt(final Person person) {
 		return generateJwt(person, 900, secret, issuer);
 	}
 
@@ -45,11 +49,13 @@ public class GenerateToken {
 		return generateJwt(person(), expireInsec, secret, issuer);
 	}
 
-	public static String generateJwt(final PersonTraits person, final int expireInsec, final String secret, final String issuer) {
+	public static String generateJwt(final Person person, final int expireInsec, final String secret, final String issuer) {
 		final Calendar currentTime = GregorianCalendar.getInstance();
 		final Calendar expiration = GregorianCalendar.getInstance();
 		expiration.setTime(currentTime.getTime());
 		expiration.add(Calendar.SECOND, expireInsec);
+
+		PersonTraits personTraits = personToPersonTraitsTranformer.transformToService(person);
 
 		// The JWT signature algorithm we will be using to sign the token
 		final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -64,46 +70,32 @@ public class GenerateToken {
 				.setId(UUID.randomUUID().toString())
 				.setExpiration(expiration.getTime())
 
-				.claim("firstName", person.getFirstName())
-				.claim("middleName", person.getMiddleName())
-				.claim("lastName", person.getLastName())
-				.claim("prefix", person.getPrefix())
-				.claim("suffix", person.getSuffix())
-				.claim("birthDate", person.getBirthDate())
-				.claim("gender", person.getGender())
-				.claim("assuranceLevel", person.getAssuranceLevel())
-				.claim("email", person.getEmail())
-				.claim("dodedipnid", person.getDodedipnid())
-				.claim("pnidType", person.getPnidType())
-				.claim("pnid", person.getPnid())
-				.claim("pid", person.getPid())
-				.claim("icn", person.getIcn())
-				.claim("fileNumber", person.getFileNumber())
-				.claim("correlationIds", person.getCorrelationIds())
+				.claim("firstName", personTraits.getFirstName()).claim("middleName", personTraits.getMiddleName())
+				.claim("lastName", personTraits.getLastName()).claim("prefix", personTraits.getPrefix())
+				.claim("suffix", personTraits.getSuffix()).claim("birthDate", personTraits.getBirthDate())
+				.claim("gender", personTraits.getGender()).claim("assuranceLevel", personTraits.getAssuranceLevel())
+				.claim("email", personTraits.getEmail()).claim("dodedipnid", personTraits.getDodedipnid())
+				.claim("pnidType", personTraits.getPnidType()).claim("pnid", personTraits.getPnid())
+				.claim("pid", personTraits.getPid()).claim("icn", personTraits.getIcn())
+				.claim("fileNumber", personTraits.getFileNumber()).claim("correlationIds", personTraits.getCorrelationIds())
 				.signWith(signatureAlgorithm, signingKey).compact();
 	}
 
-	public static PersonTraits person() {
-		final PersonTraits personTraits = new PersonTraits();
-		personTraits.setFirstName("JANE");
-		personTraits.setLastName("DOE");
-		personTraits.setPrefix("Ms");
-		personTraits.setMiddleName("M");
-		personTraits.setSuffix("S");
-		personTraits.setBirthDate("1955-01-01");
-		personTraits.setGender("FEMALE");
-		personTraits.setAssuranceLevel(2);
-		personTraits.setEmail("jane.doe@va.gov");
-		personTraits.setDodedipnid("1105051936");
-		personTraits.setPnidType("SS");
-		personTraits.setPnid("912444689");
-		personTraits.setPid("6666345");
-		personTraits.setIcn("77779102");
-		personTraits.setFileNumber("912444689");
+	public static Person person() {
+		final Person person = new Person();
+		person.setFirstName("JANE");
+		person.setLastName("DOE");
+		person.setPrefix("Ms");
+		person.setMiddleName("M");
+		person.setSuffix("S");
+		person.setBirthDate("1955-01-01");
+		person.setGender("FEMALE");
+		person.setAssuranceLevel(2);
+		person.setEmail("jane.doe@va.gov");
 
 		final List<String> strArray = Arrays.asList("77779102^NI^200M^USVHA^P", "912444689^PI^200BRLS^USVBA^A",
 				"6666345^PI^200CORP^USVBA^A", "1105051936^NI^200DOD^USDOD^A", "912444689^SS");
-		personTraits.setCorrelationIds(strArray);
-		return personTraits;
+		person.setCorrelationIds(strArray);
+		return person;
 	}
 }

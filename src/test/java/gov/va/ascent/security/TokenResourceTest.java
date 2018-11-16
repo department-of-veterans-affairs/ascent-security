@@ -5,9 +5,9 @@
  */
 package gov.va.ascent.security;
 
-import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.config.AscentSecurityTestConfig;
 import gov.va.ascent.security.jwt.JwtAuthenticationProperties;
+import gov.va.ascent.security.model.Person;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ public class TokenResourceTest {
 	 */
 	@Test
 	public void testGetToken() {
-		PersonTraits person = new PersonTraits();
+		Person person = new Person();
 		person.setFirstName("john");
 		person.setLastName("doe");
 		String result = tokenResource.getToken(person);
@@ -49,14 +49,14 @@ public class TokenResourceTest {
 
 	}
 
-    /**
-     * Test of initBinder method, of class TokenResource.
-     */
-    @Test
-    public void testInitBinder() {
-        WebDataBinder binder = new WebDataBinder(null, null);
-        TokenResource instance = new TokenResource();
-        instance.initBinder(binder);
-        assertTrue(binder.getAllowedFields().length > 0);
-    }
+	/**
+	 * Test of initBinder method, of class TokenResource.
+	 */
+	@Test
+	public void testInitBinder() {
+		WebDataBinder binder = new WebDataBinder(null, null);
+		TokenResource instance = new TokenResource();
+		instance.initBinder(binder);
+		assertTrue(binder.getAllowedFields().length > 0);
+	}
 }

@@ -54,7 +54,7 @@ public class JwtParser {
 		claims = Jwts.parser().setSigningKey(signingKey).requireIssuer(jwtAuthenticationProperties.getIssuer()).parseClaimsJws(token)
 				.getBody();
 
-		// TODO remove this log statement
+		// NOSONAR TODO remove this log statement
 		LOGGER.info("REMOVE THIS LOG STATEMENT.  JWT claims {} " + ReflectionToStringBuilder.toString(claims));
 
 		return getPersonFrom(claims);

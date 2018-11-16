@@ -39,14 +39,11 @@ public class CorrelationIdsParser {
 	 * @param personTraits - the object to update with IDs from the list of correlation ids
 	 * @throws AscentRuntimeException if some problem with the correlation ids
 	 */
-	public void parseCorrelationIds(final List<String> list, PersonTraits personTraits) {
-		if (list == null || list.isEmpty()) {
-			String msg = "Cannot process null or empty list of correlation ids";
-			LOGGER.error(msg);
-			throw new AscentRuntimeException(msg);
-		}
-		for (final String token : list) {
-			processToken(token, personTraits);
+	public void parseCorrelationIds(final List<String> list, final PersonTraits personTraits) {
+		if ((list != null) && !list.isEmpty()) {
+			for (final String token : list) {
+				processToken(token, personTraits);
+			}
 		}
 	}
 
@@ -56,7 +53,7 @@ public class CorrelationIdsParser {
 	 * @param tokenId
 	 * @throws AscentRuntimeException if some problem with the correlation ids
 	 */
-	private void processToken(final String token, PersonTraits personTraits) {
+	private void processToken(final String token, final PersonTraits personTraits) {
 		// split a single correlation id into its component parts
 		if (StringUtils.isBlank(token)) {
 			String msg = "Cannot process blank correlation id";
@@ -115,9 +112,8 @@ public class CorrelationIdsParser {
 	 * @param assigningAuthority
 	 * @param assigningFacility
 	 */
-	private void determineEdipiAndIcn(PersonTraits personTraits, final String elementId, final String type,
-			final String assigningAuthority,
-			final String assigningFacility) {
+	private void determineEdipiAndIcn(final PersonTraits personTraits, final String elementId, final String type,
+			final String assigningAuthority, final String assigningFacility) {
 		if (type.equals(IdTypes.NATIONAL.value())) {
 			if (assigningFacility.equals(Sources.USDOD.value()) && assigningAuthority.equals(Issuers.USDOD.value())) {
 				personTraits.setDodedipnid(elementId);
@@ -134,7 +130,7 @@ public class CorrelationIdsParser {
 	 * @param type
 	 * @param assigningAuthority
 	 */
-	private void determinePnIDAndPnIdType(PersonTraits personTraits, final String elementId, final String type,
+	private void determinePnIDAndPnIdType(final PersonTraits personTraits, final String elementId, final String type,
 			final String assigningAuthority) {
 		if (type.equals(IdTypes.SOCIAL.value()) && assigningAuthority.equals(Issuers.USVBA.value())) {
 			personTraits.setPnid(elementId);
