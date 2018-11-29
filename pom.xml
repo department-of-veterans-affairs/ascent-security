@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>gov.va.ascent</groupId>
 		<artifactId>ascent-libraries-parent</artifactId>
-		<version>0.0.8</version>
+		<version>0.0.9-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>ascent-security</artifactId>
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-annotations</artifactId>
-			<version>1.5.20</version>
+			<version>${swagger-annotations.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
