@@ -71,16 +71,12 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		try {
 			return getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
 		} catch (SignatureException signatureException) {
-			writeAuditForJwtTokenErrors(
-					new StringBuffer("Tampered Token[").append(token).append("]\nSignatureException[")
-							.append(signatureException.getMessage()).append("]\n").toString(),
-					request);
+			writeAuditForJwtTokenErrors(new StringBuffer("Tampered Token[").append(token).append("]\nSignatureException[")
+					.append(signatureException.getMessage()).append("]\n").toString(), request, signatureException);
 			throw new JwtAuthenticationException("Tampered Token");
 		} catch (MalformedJwtException ex) {
-			writeAuditForJwtTokenErrors(
-					new StringBuffer("Malformed Token[").append(token).append(" ]\nMalformedJwtException[").append(ex.getMessage())
-							.append("]\n").toString(),
-					request);
+			writeAuditForJwtTokenErrors(new StringBuffer("Malformed Token[").append(token).append(" ]\nMalformedJwtException[")
+					.append(ex.getMessage()).append("]\n").toString(), request, ex);
 			throw new JwtAuthenticationException("Malformed Token");
 		}
 	}
@@ -91,7 +87,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	 * @param cause - cause
 	 * @param request - original request
 	 */
-	private void writeAuditForJwtTokenErrors(String cause, HttpServletRequest request) {
+	private void writeAuditForJwtTokenErrors(final String cause, final HttpServletRequest request, final Throwable t) {
 		String message = "";
 		try {
 			message = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
@@ -102,7 +98,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		String data = cause.concat(" Request: ").concat(message);
 		AuditEventData auditData =
 				new AuditEventData(AuditEvents.SECURITY, "attemptAuthentication", JwtAuthenticationFilter.class.getName());
-		AuditLogger.error(auditData, data);
+		AuditLogger.error(auditData, data, t);
 	}
 
 	@Override
