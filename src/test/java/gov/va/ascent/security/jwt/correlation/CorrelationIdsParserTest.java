@@ -22,7 +22,7 @@ public class CorrelationIdsParserTest {
 	private static final int ELEMENT_SS_COUNT = 2;
 
 	/** The count of elements in the CorrelationIds array that indicates it does not contain SS */
-	private static final int ELEMENT_MAX_COUNT = 4;
+	private static final int ELEMENT_MAX_COUNT = 5;
 
 	@Before
 	public void setUp() throws Exception {
