@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-
 import gov.va.ascent.framework.log.AscentLogger;
 import gov.va.ascent.framework.log.AscentLoggerFactory;
 import gov.va.ascent.framework.security.PersonTraits;
@@ -53,9 +51,6 @@ public class JwtParser {
 
 		claims = Jwts.parser().setSigningKey(signingKey).requireIssuer(jwtAuthenticationProperties.getIssuer()).parseClaimsJws(token)
 				.getBody();
-
-		// NOSONAR TODO remove this log statement
-		LOGGER.info("REMOVE THIS LOG STATEMENT.  JWT claims {} " + ReflectionToStringBuilder.toString(claims));
 
 		return getPersonFrom(claims);
 

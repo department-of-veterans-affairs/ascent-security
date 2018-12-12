@@ -16,7 +16,7 @@ public class CorrelationIdsParser {
 	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(CorrelationIdsParser.class);
 
 	/** The count of elements in the CorrelationIds array that indicates it does not contain SS */
-	private static final int ELEMENT_MAX_COUNT = 4;
+	private static final int ELEMENT_MAX_COUNT = 5;
 
 	/** The count of elements in the CorrelationIds array that indicates it is only SS */
 	private static final int ELEMENT_SS_COUNT = 2;
@@ -40,7 +40,7 @@ public class CorrelationIdsParser {
 	 * @throws AscentRuntimeException if some problem with the correlation ids
 	 */
 	public void parseCorrelationIds(final List<String> list, final PersonTraits personTraits) {
-		if ((list != null) && !list.isEmpty()) {
+		if (list != null && !list.isEmpty()) {
 			for (final String token : list) {
 				processToken(token, personTraits);
 			}

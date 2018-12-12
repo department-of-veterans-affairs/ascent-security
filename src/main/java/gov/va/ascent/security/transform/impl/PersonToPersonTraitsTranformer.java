@@ -16,28 +16,34 @@ public class PersonToPersonTraitsTranformer extends AbstractProviderSecurityTran
 
 	@Override
 	public PersonTraits transformToService(final Person toTransform) {
-		PersonTraits personTraits = new PersonTraits();
+		PersonTraits personTraits = null;
 
-		personTraits.setFirstName(toTransform.getFirstName());
-		personTraits.setLastName(toTransform.getLastName());
-		personTraits.setPrefix(toTransform.getPrefix());
-		personTraits.setMiddleName(toTransform.getMiddleName());
-		personTraits.setSuffix(toTransform.getSuffix());
-		personTraits.setBirthDate(toTransform.getBirthDate());
-		personTraits.setGender(toTransform.getGender());
-		personTraits.setAssuranceLevel(toTransform.getAssuranceLevel());
-		personTraits.setEmail(toTransform.getEmail());
+		if (toTransform == null) {
+			throw new AscentRuntimeException("Cannot transform a null Person model object.");
+		} else {
+			personTraits = new PersonTraits();
 
-		try {
-			CorrelationIdsParser instance = new CorrelationIdsParser();
-			@SuppressWarnings("unchecked")
-			List<String> list = toTransform.getCorrelationIds();
-			instance.parseCorrelationIds(list, personTraits);
+			personTraits.setFirstName(toTransform.getFirstName());
+			personTraits.setLastName(toTransform.getLastName());
+			personTraits.setPrefix(toTransform.getPrefix());
+			personTraits.setMiddleName(toTransform.getMiddleName());
+			personTraits.setSuffix(toTransform.getSuffix());
+			personTraits.setBirthDate(toTransform.getBirthDate());
+			personTraits.setGender(toTransform.getGender());
+			personTraits.setAssuranceLevel(toTransform.getAssuranceLevel());
+			personTraits.setEmail(toTransform.getEmail());
 
-		} catch (Exception e) { // NOSONAR intentionally wide, errors are already logged
-			// if there is any detected issue with the correlation ids
-			LOGGER.error("Unable to parse correlation Ids", e);
-			throw new AscentRuntimeException("Unable to parse correlation Ids", e);
+			try {
+				CorrelationIdsParser instance = new CorrelationIdsParser();
+				@SuppressWarnings("unchecked")
+				List<String> list = toTransform.getCorrelationIds();
+				instance.parseCorrelationIds(list, personTraits);
+
+			} catch (Exception e) { // NOSONAR intentionally wide, errors are already logged
+				// if there is any detected issue with the correlation ids
+				LOGGER.error("Unable to parse correlation Ids", e);
+				throw new AscentRuntimeException("Unable to parse correlation Ids", e);
+			}
 		}
 
 		return personTraits;
