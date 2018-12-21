@@ -10,9 +10,7 @@ import java.util.UUID;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.model.Person;
-import gov.va.ascent.security.transform.impl.PersonToPersonTraitsTranformer;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -23,8 +21,6 @@ public class GenerateToken {
 
 	private static String secret = "secret";
 	private static String issuer = "Vets.gov";
-
-	private static PersonToPersonTraitsTranformer personToPersonTraitsTranformer = new PersonToPersonTraitsTranformer();
 
 	/**
 	 * Do not instantiate
@@ -55,8 +51,6 @@ public class GenerateToken {
 		expiration.setTime(currentTime.getTime());
 		expiration.add(Calendar.SECOND, expireInsec);
 
-		PersonTraits personTraits = personToPersonTraitsTranformer.transformToService(person);
-
 		// The JWT signature algorithm we will be using to sign the token
 		final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -69,15 +63,16 @@ public class GenerateToken {
 				.setIssuedAt(currentTime.getTime())
 				.setId(UUID.randomUUID().toString())
 				.setExpiration(expiration.getTime())
-
-				.claim("firstName", personTraits.getFirstName()).claim("middleName", personTraits.getMiddleName())
-				.claim("lastName", personTraits.getLastName()).claim("prefix", personTraits.getPrefix())
-				.claim("suffix", personTraits.getSuffix()).claim("birthDate", personTraits.getBirthDate())
-				.claim("gender", personTraits.getGender()).claim("assuranceLevel", personTraits.getAssuranceLevel())
-				.claim("email", personTraits.getEmail()).claim("dodedipnid", personTraits.getDodedipnid())
-				.claim("pnidType", personTraits.getPnidType()).claim("pnid", personTraits.getPnid())
-				.claim("pid", personTraits.getPid()).claim("icn", personTraits.getIcn())
-				.claim("fileNumber", personTraits.getFileNumber()).claim("correlationIds", personTraits.getCorrelationIds())
+				.claim("firstName", person.getFirstName())
+				.claim("middleName", person.getMiddleName())
+				.claim("lastName", person.getLastName())
+				.claim("prefix", person.getPrefix())
+				.claim("suffix", person.getSuffix())
+				.claim("birthDate", person.getBirthDate())
+				.claim("gender", person.getGender())
+				.claim("assuranceLevel", person.getAssuranceLevel())
+				.claim("email", person.getEmail())
+				.claim("correlationIds", person.getCorrelationIds())
 				.signWith(signatureAlgorithm, signingKey).compact();
 	}
 
