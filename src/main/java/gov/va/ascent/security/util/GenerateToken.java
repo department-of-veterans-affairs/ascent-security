@@ -10,6 +10,11 @@ import java.util.UUID;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.lang3.StringUtils;
+
+import gov.va.ascent.framework.security.PersonTraits;
+import gov.va.ascent.security.jwt.JwtAuthenticationException;
+import gov.va.ascent.security.jwt.correlation.CorrelationIdsParser;
 import gov.va.ascent.security.model.Person;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -56,6 +61,20 @@ public class GenerateToken {
 
 		// We will sign our JWT with our ApiKey secret
 		final Key signingKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), signatureAlgorithm.getJcaName());
+
+		final PersonTraits personTraits = new PersonTraits();
+		try {
+			List<String> list = person.getCorrelationIds();
+			CorrelationIdsParser.parseCorrelationIds(list, personTraits);
+
+		} catch (Exception e) { // NOSONAR intentionally wide, errors are already logged
+			// if there is any detected issue with the correlation ids
+			throw new JwtAuthenticationException("Invalid Token");
+		}
+
+		if (StringUtils.isBlank(personTraits.getPid())) {
+			throw new JwtAuthenticationException("Pid not provided or Invalid Pid");
+		}
 
 		return Jwts.builder()
 				.setHeaderParam("typ", "JWT")
