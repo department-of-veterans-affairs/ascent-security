@@ -5,6 +5,8 @@
  */
 package gov.va.ascent.security.jwt;
 
+import static gov.va.ascent.security.jwt.JwtAuthenticationProvider.isPersonTraitsInvalid;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -22,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.TokenResource;
 import gov.va.ascent.security.config.AscentSecurityTestConfig;
 import gov.va.ascent.security.model.Person;
@@ -99,5 +102,16 @@ public class JwtAuthenticationProviderTest {
 		final JwtParser parser = new JwtParser(jwtAuthenticationProperties);
 		final JwtAuthenticationProvider instance = new JwtAuthenticationProvider(parser);
 		instance.retrieveUser("username", authentication);
+	}
+
+	/**
+	 * Test of method that validates PersonTraits in the Jwt token, of class JwtAuthenticationProvider.
+	 */
+	@Test
+	public void testIsPersonTraitsInvalid() {
+		PersonTraits person = new PersonTraits();
+		person.setFirstName("string");
+		assertFalse(isPersonTraitsInvalid(person, new String[] { "firstName" }));
+		assertTrue(isPersonTraitsInvalid(person, new String[] { "firstName", "assuranceLevel" }));
 	}
 }
