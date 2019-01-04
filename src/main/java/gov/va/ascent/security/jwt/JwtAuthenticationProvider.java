@@ -3,7 +3,7 @@ package gov.va.ascent.security.jwt;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
