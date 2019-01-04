@@ -17,6 +17,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
+
+import java.util.Arrays;
+
 import org.springframework.web.bind.WebDataBinder;
 
 /**
@@ -44,6 +47,9 @@ public class TokenResourceTest {
 		Person person = new Person();
 		person.setFirstName("john");
 		person.setLastName("doe");
+		String[] arrayOfCorrelationIds = { "1012832469V956223^NI^200M^USVHA^P", "796046489^PI^200BRLS^USVBA^A",
+				"600071516^PI^200CORP^USVBA^A", "1040626995^NI^200DOD^USDOD^A", "796046489^SS" };
+		person.setCorrelationIds(Arrays.asList(arrayOfCorrelationIds));
 		String result = tokenResource.getToken(person);
 		assertTrue(result.length() > 0);
 

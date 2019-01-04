@@ -1,6 +1,5 @@
 package gov.va.ascent.security.jwt.correlation;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -16,8 +15,6 @@ import gov.va.ascent.framework.security.PersonTraits;
 
 public class CorrelationIdsParserTest {
 
-	CorrelationIdsParser parser = new CorrelationIdsParser();
-
 	/** The count of elements in the CorrelationIds array that indicates it is only SS */
 	private static final int ELEMENT_SS_COUNT = 2;
 
@@ -26,7 +23,6 @@ public class CorrelationIdsParserTest {
 
 	@Before
 	public void setUp() throws Exception {
-		assertNotNull(parser);
 	}
 
 	@Test
@@ -35,7 +31,7 @@ public class CorrelationIdsParserTest {
 		String[] correlationIds = { "1012832469V956223^NI^200M^USVHA^P", "796046489^PI^200BRLS^USVBA^A",
 				"600071516^PI^200CORP^USVBA^A", "1040626995^NI^200DOD^USDOD^A", "1040626995^SS^200BRLS^USVBA^A", "796046489^SS" };
 		PersonTraits personTraits = new PersonTraits();
-		parser.parseCorrelationIds(Arrays.asList(correlationIds), personTraits);
+		CorrelationIdsParser.parseCorrelationIds(Arrays.asList(correlationIds), personTraits);
 
 		assertTrue(personTraits.getDodedipnid().equals("1040626995"));
 		assertTrue(personTraits.getFileNumber().equals("796046489"));
@@ -57,7 +53,7 @@ public class CorrelationIdsParserTest {
 		String token = correlationIdList.get(0);
 		String[] tokens = token.split("\\^");
 		try {
-			parser.parseCorrelationIds(correlationIdList, personTraits);
+			CorrelationIdsParser.parseCorrelationIds(correlationIdList, personTraits);
 			fail("Should have thrown AscentRuntimeException");
 		} catch (Exception e) {
 			String msg = "Invalid number of elements {} in correlation id {}, should be " + ELEMENT_MAX_COUNT + " or "
@@ -71,7 +67,7 @@ public class CorrelationIdsParserTest {
 			String[] correlationIds = { null, "796046489^PI^200BRLS^USVBA^A", "600071516^PI^200CORP^USVBA^A",
 					"1040626995^NI^200DOD^USDOD^A", "796046489^SS" };
 			personTraits = new PersonTraits();
-			parser.parseCorrelationIds(Arrays.asList(correlationIds), personTraits);
+			CorrelationIdsParser.parseCorrelationIds(Arrays.asList(correlationIds), personTraits);
 			fail("Should have thrown AscentRuntimeException");
 		} catch (Exception e) {
 			assertTrue(AscentRuntimeException.class.isAssignableFrom(e.getClass()));
@@ -84,7 +80,7 @@ public class CorrelationIdsParserTest {
 			String[] correlationIds = { "1012832469V956223^NI^200M", "796046489^PI^200BRLS^USVBA^A", "600071516^PI^200CORP^USVBA^A",
 					"1040626995^NI^200DOD^USDOD^A", "796046489^SS" };
 			personTraits = new PersonTraits();
-			parser.parseCorrelationIds(Arrays.asList(correlationIds), personTraits);
+			CorrelationIdsParser.parseCorrelationIds(Arrays.asList(correlationIds), personTraits);
 			fail("Should have thrown AscentRuntimeException");
 		} catch (Exception e) {
 			assertTrue(AscentRuntimeException.class.isAssignableFrom(e.getClass()));

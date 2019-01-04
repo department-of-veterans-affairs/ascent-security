@@ -1,5 +1,7 @@
 package gov.va.ascent.security.util;
 
+import static gov.va.ascent.security.jwt.JwtAuthenticationProvider.isPersonTraitsInvalid;
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Arrays;
@@ -10,6 +12,11 @@ import java.util.UUID;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Value;
+
+import gov.va.ascent.framework.security.PersonTraits;
+import gov.va.ascent.security.jwt.JwtAuthenticationException;
+import gov.va.ascent.security.jwt.correlation.CorrelationIdsParser;
 import gov.va.ascent.security.model.Person;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,30 +29,33 @@ public class GenerateToken {
 	private static String secret = "secret";
 	private static String issuer = "Vets.gov";
 
+	@Value("${ascent.security.jwt.validation.required-parameters}")
+	String[] jwtTokenRequiredParameterList;
+
 	/**
 	 * Do not instantiate
 	 */
 	private GenerateToken() {
-		throw new UnsupportedOperationException("This is a static class. Do not instantiate it.");
 	}
 
 	public static String generateJwt() {
-		return generateJwt(person(), 900, secret, issuer);
+		return generateJwt(person(), 900, secret, issuer, null);
 	}
 
 	public static String generateJwt(final Person person, final String secret, final String issuer) {
-		return generateJwt(person, 900, secret, issuer);
+		return generateJwt(person, 900, secret, issuer, null);
 	}
 
 	public static String generateJwt(final Person person) {
-		return generateJwt(person, 900, secret, issuer);
+		return generateJwt(person, 900, secret, issuer, null);
 	}
 
 	public static String generateJwt(final int expireInsec) {
-		return generateJwt(person(), expireInsec, secret, issuer);
+		return generateJwt(person(), expireInsec, secret, issuer, null);
 	}
 
-	public static String generateJwt(final Person person, final int expireInsec, final String secret, final String issuer) {
+	public static String generateJwt(final Person person, final int expireInsec, final String secret, final String issuer,
+			final String[] jwtTokenRequiredParameterList) {
 		final Calendar currentTime = GregorianCalendar.getInstance();
 		final Calendar expiration = GregorianCalendar.getInstance();
 		expiration.setTime(currentTime.getTime());
@@ -56,6 +66,20 @@ public class GenerateToken {
 
 		// We will sign our JWT with our ApiKey secret
 		final Key signingKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), signatureAlgorithm.getJcaName());
+
+		final PersonTraits personTraits = populatePersonTraits(person);
+		try {
+			List<String> list = person.getCorrelationIds();
+			CorrelationIdsParser.parseCorrelationIds(list, personTraits);
+
+		} catch (Exception e) { // NOSONAR intentionally wide, errors are already logged
+			// if there is any detected issue with the correlation ids
+			throw new JwtAuthenticationException("Invalid Token");
+		}
+
+		if (isPersonTraitsInvalid(personTraits, jwtTokenRequiredParameterList)) {
+			throw new JwtAuthenticationException("Invalid Token");
+		}
 
 		return Jwts.builder()
 				.setHeaderParam("typ", "JWT")
@@ -74,6 +98,22 @@ public class GenerateToken {
 				.claim("email", person.getEmail())
 				.claim("correlationIds", person.getCorrelationIds())
 				.signWith(signatureAlgorithm, signingKey).compact();
+	}
+
+	private static PersonTraits populatePersonTraits(final Person person) {
+		PersonTraits personTraits = new PersonTraits();
+
+		personTraits.setFirstName(person.getFirstName());
+		personTraits.setLastName(person.getLastName());
+		personTraits.setPrefix(person.getPrefix());
+		personTraits.setMiddleName(person.getMiddleName());
+		personTraits.setSuffix(person.getSuffix());
+		personTraits.setBirthDate(person.getBirthDate());
+		personTraits.setGender(person.getGender());
+		personTraits.setAssuranceLevel(person.getAssuranceLevel());
+		personTraits.setEmail(person.getEmail());
+
+		return personTraits;
 	}
 
 	public static Person person() {

@@ -1,6 +1,7 @@
 package gov.va.ascent.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,9 @@ public class TokenResource implements SwaggerResponseMessages {
 	@Autowired
 	private JwtAuthenticationProperties jwtAuthenticationProperties;
 
+	@Value("${ascent.security.jwt.validation.required-parameters}")
+	private String[] jwtTokenRequiredParameterList;
+
 	@RequestMapping(value = "/token", method = RequestMethod.POST, consumes = { "application/json" })
 	@ApiOperation(value = API_OPERATION_VALUE, notes = API_OPERATION_NOTES)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = MESSAGE_200), @ApiResponse(code = 400, message = MESSAGE_400),
@@ -38,7 +42,7 @@ public class TokenResource implements SwaggerResponseMessages {
 			@ApiParam(value = API_PARAM_GETTOKEN_PERSON, required = true) @RequestBody final Person person) {
 		// @ApiModel(description="Identity information for the authenticated user.")
 		return GenerateToken.generateJwt(person, jwtAuthenticationProperties.getExpireInSeconds(),
-				jwtAuthenticationProperties.getSecret(), jwtAuthenticationProperties.getIssuer());
+				jwtAuthenticationProperties.getSecret(), jwtAuthenticationProperties.getIssuer(), jwtTokenRequiredParameterList);
 	}
 
 	/**

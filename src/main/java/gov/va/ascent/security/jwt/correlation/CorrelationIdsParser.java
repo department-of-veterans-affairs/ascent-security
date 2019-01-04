@@ -33,14 +33,21 @@ public class CorrelationIdsParser {
 	private static final int INDEX_STATUS = 4;
 
 	/**
+	 * This class is not meant to be instantiated since it all it has are utility methods for parsing correlation Ids
+	 */
+	private CorrelationIdsParser() {
+		throw new IllegalStateException("Utility class for parsing correlation Ids");
+	}
+
+	/**
 	 * Unpack a list of correlation IDs onto the provided personTraits.
 	 *
 	 * @param list - of correlation id srings
 	 * @param personTraits - the object to update with IDs from the list of correlation ids
 	 * @throws AscentRuntimeException if some problem with the correlation ids
 	 */
-	public void parseCorrelationIds(final List<String> list, final PersonTraits personTraits) {
-		if (list != null && !list.isEmpty()) {
+	public static void parseCorrelationIds(final List<String> list, final PersonTraits personTraits) {
+		if ((list != null) && !list.isEmpty()) {
 			for (final String token : list) {
 				processToken(token, personTraits);
 			}
@@ -53,7 +60,7 @@ public class CorrelationIdsParser {
 	 * @param tokenId
 	 * @throws AscentRuntimeException if some problem with the correlation ids
 	 */
-	private void processToken(final String token, final PersonTraits personTraits) {
+	private static void processToken(final String token, final PersonTraits personTraits) {
 		// split a single correlation id into its component parts
 		if (StringUtils.isBlank(token)) {
 			String msg = "Cannot process blank correlation id";
@@ -93,9 +100,8 @@ public class CorrelationIdsParser {
 	 * @param assigningAuthority
 	 * @param assigningFacility
 	 */
-	private void determinePidAndFileNumber(PersonTraits personTraits, final String elementId, final String type,
-			final String assigningAuthority,
-			final String assigningFacility) {
+	private static void determinePidAndFileNumber(final PersonTraits personTraits, final String elementId, final String type,
+			final String assigningAuthority, final String assigningFacility) {
 		if (type.equals(IdTypes.PATIENT.value()) && assigningAuthority.equals(Issuers.USVBA.value())) {
 			if (assigningFacility.equals(Sources.CORP.value())) {
 				personTraits.setPid(elementId);
@@ -112,7 +118,7 @@ public class CorrelationIdsParser {
 	 * @param assigningAuthority
 	 * @param assigningFacility
 	 */
-	private void determineEdipiAndIcn(final PersonTraits personTraits, final String elementId, final String type,
+	private static void determineEdipiAndIcn(final PersonTraits personTraits, final String elementId, final String type,
 			final String assigningAuthority, final String assigningFacility) {
 		if (type.equals(IdTypes.NATIONAL.value())) {
 			if (assigningFacility.equals(Sources.USDOD.value()) && assigningAuthority.equals(Issuers.USDOD.value())) {
@@ -130,7 +136,7 @@ public class CorrelationIdsParser {
 	 * @param type
 	 * @param assigningAuthority
 	 */
-	private void determinePnIDAndPnIdType(final PersonTraits personTraits, final String elementId, final String type,
+	private static void determinePnIDAndPnIdType(final PersonTraits personTraits, final String elementId, final String type,
 			final String assigningAuthority) {
 		if (type.equals(IdTypes.SOCIAL.value()) && assigningAuthority.equals(Issuers.USVBA.value())) {
 			personTraits.setPnid(elementId);

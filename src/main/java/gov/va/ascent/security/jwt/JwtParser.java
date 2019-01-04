@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import gov.va.ascent.framework.log.AscentLogger;
-import gov.va.ascent.framework.log.AscentLoggerFactory;
 import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.jwt.correlation.CorrelationIdsParser;
 import io.jsonwebtoken.Claims;
@@ -18,8 +16,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
  * Parse the encrypted JWT
  */
 public class JwtParser {
-	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(JwtParser.class);
-
 	/** The spring configurable properties used for authentication */
 	private JwtAuthenticationProperties jwtAuthenticationProperties;
 
@@ -78,10 +74,8 @@ public class JwtParser {
 		personTraits.setEmail(claims.get("email", String.class));
 
 		try {
-			CorrelationIdsParser instance = new CorrelationIdsParser();
-			@SuppressWarnings("unchecked")
 			List<String> list = (List<String>) claims.get("correlationIds");
-			instance.parseCorrelationIds(list, personTraits);
+			CorrelationIdsParser.parseCorrelationIds(list, personTraits);
 
 		} catch (Exception e) { // NOSONAR intentionally wide, errors are already logged
 			// if there is any detected issue with the correlation ids
