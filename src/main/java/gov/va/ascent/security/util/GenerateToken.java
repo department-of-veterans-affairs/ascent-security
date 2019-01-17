@@ -1,6 +1,6 @@
 package gov.va.ascent.security.util;
 
-import static gov.va.ascent.security.jwt.JwtAuthenticationProvider.isPersonTraitsInvalid;
+import static gov.va.ascent.security.jwt.JwtAuthenticationProvider.isPersonTraitsValid;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.crypto.spec.SecretKeySpec;
-
-import org.springframework.beans.factory.annotation.Value;
 
 import gov.va.ascent.framework.security.PersonTraits;
 import gov.va.ascent.security.jwt.JwtAuthenticationException;
@@ -28,9 +26,6 @@ public class GenerateToken {
 
 	private static String secret = "secret";
 	private static String issuer = "Vets.gov";
-
-	@Value("${ascent.security.jwt.validation.required-parameters}")
-	String[] jwtTokenRequiredParameterList;
 
 	/**
 	 * Do not instantiate
@@ -77,7 +72,7 @@ public class GenerateToken {
 			throw new JwtAuthenticationException("Invalid Token");
 		}
 
-		if (isPersonTraitsInvalid(personTraits, jwtTokenRequiredParameterList)) {
+		if (!isPersonTraitsValid(personTraits, jwtTokenRequiredParameterList)) {
 			throw new JwtAuthenticationException("Invalid Token");
 		}
 

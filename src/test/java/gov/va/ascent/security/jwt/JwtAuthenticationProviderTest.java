@@ -5,7 +5,7 @@
  */
 package gov.va.ascent.security.jwt;
 
-import static gov.va.ascent.security.jwt.JwtAuthenticationProvider.isPersonTraitsInvalid;
+import static gov.va.ascent.security.jwt.JwtAuthenticationProvider.isPersonTraitsValid;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -111,7 +111,7 @@ public class JwtAuthenticationProviderTest {
 	public void testIsPersonTraitsInvalid() {
 		PersonTraits person = new PersonTraits();
 		person.setFirstName("string");
-		assertFalse(isPersonTraitsInvalid(person, new String[] { "firstName" }));
-		assertTrue(isPersonTraitsInvalid(person, new String[] { "firstName", "assuranceLevel" }));
+		assertTrue(isPersonTraitsValid(person, new String[] { "firstName" }));
+		assertFalse(isPersonTraitsValid(person, new String[] { "firstName", "assuranceLevel" }));
 	}
 }
