@@ -14,11 +14,13 @@ import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ContextConfiguration;
@@ -108,10 +110,31 @@ public class JwtAuthenticationProviderTest {
 	 * Test of method that validates PersonTraits in the Jwt token, of class JwtAuthenticationProvider.
 	 */
 	@Test
-	public void testIsPersonTraitsInvalid() {
+	public void testIsPersonTraitsValid() {
 		PersonTraits person = new PersonTraits();
 		person.setFirstName("string");
 		assertTrue(isPersonTraitsValid(person, new String[] { "firstName" }));
 		assertFalse(isPersonTraitsValid(person, new String[] { "firstName", "assuranceLevel" }));
+	}
+
+	/**
+	 * Test of method that validates PersonTraits in the Jwt token, of class JwtAuthenticationProvider.
+	 */
+	@Test
+	public void testIsPersonTraitsValidInvocationException() {
+		PersonTraits person = Mockito.mock(PersonTraits.class);
+		when(person.getFirstName()).thenThrow(new IllegalArgumentException());
+		person.setFirstName("string");
+		assertFalse(isPersonTraitsValid(person, new String[] { "firstName" }));
+	}
+
+	/**
+	 * Test of method that validates PersonTraits in the Jwt token, of class JwtAuthenticationProvider.
+	 */
+	@Test
+	public void testIsPersonTraitsValidWithInvalidJwtParameter() {
+		PersonTraits person = new PersonTraits();
+		person.setFirstName("string");
+		assertFalse(isPersonTraitsValid(person, new String[] { "testText" }));
 	}
 }
