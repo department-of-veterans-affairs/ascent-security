@@ -23,7 +23,7 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
 	/** parses the token into a set of security "claims" contained in the token */
 	JwtParser parser;
 
-	@Value("${ascent.security.jwt.validation.required-parameters}")
+	@Value("${ascent.security.jwt.validation.required-parameters:}")
 	private String[] jwtTokenRequiredParameterList;
 
 	/**
@@ -47,39 +47,37 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
 		final String token = authenticationToken.getToken();// pass this for verification
 
 		final PersonTraits person = parser.parseJwt(token);
-		if ((person == null) || isPersonTraitsInvalid(person, jwtTokenRequiredParameterList)) {
+		if ((person == null) || !isPersonTraitsValid(person, jwtTokenRequiredParameterList)) {
 			throw new JwtAuthenticationException("Invalid Token");
 		}
 		return person;
 	}
 
-	public static boolean isPersonTraitsInvalid(final PersonTraits person, final String[] jwtTokenRequiredParameterList) {
+	public static boolean isPersonTraitsValid(final PersonTraits person, final String[] jwtTokenRequiredParameterList) {
 		if (jwtTokenRequiredParameterList == null) {
-			return false;
+			return true;
 		}
 
-		boolean isValid = false;
+		boolean isValid = true;
 		for (String parameter : jwtTokenRequiredParameterList) {
-			isValid = checkEachParameter(person, parameter);
+			isValid = checkIfEachParameterIsValid(person, parameter);
 		}
 
 		return isValid;
 	}
 
-	private static boolean checkEachParameter(final PersonTraits person, final String parameter) {
-		boolean isValid = false;
+	private static boolean checkIfEachParameterIsValid(final PersonTraits person, final String parameter) {
 		for (Method method : PersonTraits.class.getDeclaredMethods()) {
-			if (method.getName().contains(parameter.substring(1)) && method.getName().startsWith("get")) {
+			if (method.getName().startsWith("get") && method.getName().substring(3).equalsIgnoreCase(parameter)) {
 				try {
-					isValid =
-							isValid || (method.invoke(person) instanceof String) ? StringUtils.isBlank((String) method.invoke(person))
-									: method.invoke(person) == null;
+					return (method.invoke(person) instanceof String) ? StringUtils.isNotBlank((String) method.invoke(person))
+							: method.invoke(person) != null;
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					ASCENTLOGGER.error("Unable to check required fields in the jwt token", e);
-					return true;
+					return false;
 				}
 			}
 		}
-		return isValid;
+		return false;
 	}
 }
