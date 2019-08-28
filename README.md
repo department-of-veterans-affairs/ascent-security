@@ -1,9 +1,17 @@
-This page documents the purpose and capabilities of **Ascent Security** library.
+# This repository is no longer maintained.
 
-## What is this repository for? ##
+Issue reports and pull requests will not be attended. 
 
-This is a repository for the **ascent-security** library which is enabled by the microservices using the ascent platform. The api's within this library uses spring security features to authenticate **JWT** for each incoming requests. 
+To deploy spring boot and spring cloud microservices on BIP Platform, refer to the following repositories:
 
-See [Ascent-Security](https://github.com/department-of-veterans-affairs/ascent-platform/wiki/PLATFORM-:-Ascent-Security) for additional details.
+**DSVA**
+1. BIP Framework: https://github.com/department-of-veterans-affairs/bip-framework
+2. BIP Reference Person Example Service: https://github.com/department-of-veterans-affairs/bip-reference-person
+3. BIP Archetype Service: https://github.com/department-of-veterans-affairs/bip-archetype-service
+4. BIP Jenkins Library: https://github.com/department-of-veterans-affairs/os-svc-jenkins-lib/
 
-See [Ascent Quick Start Guide](https://github.com/department-of-veterans-affairs/ascent-platform/wiki/DEV-:-Platform-Quick-Start-Guide) for the software prerequisites.
+**EPMO**
+1. BIP Framework: https://github.ec.va.gov/EPMO/bip-framework
+2. BIP Reference Person Example Service: https://github.ec.va.gov/EPMO/bip-reference-person
+3. BIP Archetype Service: https://github.ec.va.gov/EPMO/bip-archetype-service
+4. BIP Jenkins Library: https://github.ec.va.gov/EPMO/bip-jenkins-lib
